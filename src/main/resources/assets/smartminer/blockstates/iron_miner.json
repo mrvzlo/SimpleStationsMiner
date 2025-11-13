@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "smartminer:block/iron_miner" }
+  }
+}
