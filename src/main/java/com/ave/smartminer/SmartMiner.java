@@ -15,7 +15,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -36,10 +35,18 @@ public class SmartMiner {
     public static final DeferredBlock<Block> IRON_MINER_BLOCK = BLOCKS.register("iron_miner",
             () -> new AutoMinerBlock(BlockBehaviour.Properties.of()
                     .strength(4F)
-                    .requiresCorrectToolForDrops()));
+                    .requiresCorrectToolForDrops(), AutoMinerType.IRON));
 
     public static final DeferredItem<BlockItem> IRON_MINER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("iron_miner",
             IRON_MINER_BLOCK);
+
+    public static final DeferredBlock<Block> GOLD_MINER_BLOCK = BLOCKS.register("gold_miner",
+            () -> new AutoMinerBlock(BlockBehaviour.Properties.of()
+                    .strength(4F)
+                    .requiresCorrectToolForDrops(), AutoMinerType.GOLD));
+
+    public static final DeferredItem<BlockItem> GOLD_MINER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("gold_miner",
+            GOLD_MINER_BLOCK);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
             .register("example_tab", () -> CreativeModeTab.builder()
@@ -49,12 +56,10 @@ public class SmartMiner {
                     .icon(() -> IRON_MINER_BLOCK_ITEM.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(IRON_MINER_BLOCK_ITEM.get());
+                        output.accept(GOLD_MINER_BLOCK_ITEM.get());
                     }).build());
 
     public SmartMiner(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
-
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
@@ -62,10 +67,6 @@ public class SmartMiner {
 
         modEventBus.addListener(this::addCreative);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-    }
-
-    private void commonSetup(FMLCommonSetupEvent event) {
-        Config.ITEM_STRINGS.get().forEach((item) -> LOGGER.info("ITEM >> {}", item));
     }
 
     // Add the example block item to the building blocks tab

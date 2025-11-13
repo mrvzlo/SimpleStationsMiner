@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "working=true": { "model": "smartminer:block/gold_miner" },
+    "working=false": { "model": "smartminer:block/gold_miner_stop" }
+  }
+}
