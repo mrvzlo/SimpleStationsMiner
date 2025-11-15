@@ -1,6 +1,8 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube_bottom_top",
   "textures": {
-    "all": "smartminer:block/gold_miner"
+    "top": "smartminer:block/miner_top",
+    "bottom": "smartminer:block/miner_top",
+    "side": "smartminer:block/gold_miner"
   }
 }

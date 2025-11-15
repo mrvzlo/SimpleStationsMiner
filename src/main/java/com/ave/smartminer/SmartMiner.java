@@ -39,21 +39,14 @@ public class SmartMiner {
         public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
                         .create(Registries.CREATIVE_MODE_TAB, MODID);
 
-        public static final DeferredBlock<Block> IRON_MINER_BLOCK = BLOCKS.register("iron_miner",
+        public static final DeferredBlock<Block> Smart_MINER_BLOCK = BLOCKS.register("smart_miner",
                         () -> new SmartMinerBlock(BlockBehaviour.Properties.of()
                                         .strength(4F)
-                                        .requiresCorrectToolForDrops(), SmartMinerType.IRON));
+                                        .requiresCorrectToolForDrops()));
 
-        public static final DeferredItem<BlockItem> IRON_MINER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("iron_miner",
-                        IRON_MINER_BLOCK);
-
-        public static final DeferredBlock<Block> GOLD_MINER_BLOCK = BLOCKS.register("gold_miner",
-                        () -> new SmartMinerBlock(BlockBehaviour.Properties.of()
-                                        .strength(4F)
-                                        .requiresCorrectToolForDrops(), SmartMinerType.GOLD));
-
-        public static final DeferredItem<BlockItem> GOLD_MINER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("gold_miner",
-                        GOLD_MINER_BLOCK);
+        public static final DeferredItem<BlockItem> Smart_MINER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
+                        "smart_miner",
+                        Smart_MINER_BLOCK);
 
         public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
                         .register("example_tab", () -> CreativeModeTab.builder()
@@ -61,10 +54,9 @@ public class SmartMiner {
                                                                                                // the title of your
                                                                                                // CreativeModeTab
                                         .withTabsBefore(CreativeModeTabs.COMBAT)
-                                        .icon(() -> IRON_MINER_BLOCK_ITEM.get().getDefaultInstance())
+                                        .icon(() -> Smart_MINER_BLOCK_ITEM.get().getDefaultInstance())
                                         .displayItems((parameters, output) -> {
-                                                output.accept(IRON_MINER_BLOCK_ITEM.get());
-                                                output.accept(GOLD_MINER_BLOCK_ITEM.get());
+                                                output.accept(Smart_MINER_BLOCK_ITEM.get());
                                         }).build());
 
         public SmartMiner(IEventBus modEventBus, ModContainer modContainer) {
@@ -81,6 +73,6 @@ public class SmartMiner {
         // Add the example block item to the building blocks tab
         private void addCreative(BuildCreativeModeTabContentsEvent event) {
                 if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
-                        event.accept(IRON_MINER_BLOCK_ITEM);
+                        event.accept(Smart_MINER_BLOCK_ITEM);
         }
 }

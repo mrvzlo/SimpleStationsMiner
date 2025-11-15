@@ -3,6 +3,6 @@
   "textures": {
     "top": "smartminer:block/miner_top",
     "bottom": "smartminer:block/miner_top",
-    "side": "smartminer:block/iron_miner_stop"
+    "side": "smartminer:block/miner"
   }
 }

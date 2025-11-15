@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "working=true": { "model": "smartminer:block/iron_miner" },
-    "working=false": { "model": "smartminer:block/iron_miner_stop" }
-  }
-}

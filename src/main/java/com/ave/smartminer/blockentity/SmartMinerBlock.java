@@ -26,10 +26,10 @@ public class SmartMinerBlock extends Block implements EntityBlock {
     public static final BooleanProperty WORKING = BooleanProperty.create("working");
     public static final EnumProperty<SmartMinerType> TYPE = EnumProperty.create("type", SmartMinerType.class);
 
-    public SmartMinerBlock(Properties props, SmartMinerType type) {
+    public SmartMinerBlock(Properties props) {
         super(props);
         this.registerDefaultState(
-                this.stateDefinition.any().setValue(WORKING, false).setValue(TYPE, type));
+                this.stateDefinition.any().setValue(WORKING, false).setValue(TYPE, SmartMinerType.Unknown));
     }
 
     @Nullable
