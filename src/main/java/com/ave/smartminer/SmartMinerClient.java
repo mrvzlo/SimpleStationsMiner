@@ -1,5 +1,6 @@
 package com.ave.smartminer;
 
+import com.ave.smartminer.blockentity.SmartMinerBlockEntity;
 import com.ave.smartminer.screen.ModMenuTypes;
 import com.ave.smartminer.screen.SmartMinerScreen;
 
@@ -10,6 +11,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -39,5 +41,10 @@ public class SmartMinerClient {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenuTypes.SMART_MINER_MENU.get(), SmartMinerScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerCaps(RegisterCapabilitiesEvent event) {
+        SmartMinerBlockEntity.registerCaps(event);
     }
 }

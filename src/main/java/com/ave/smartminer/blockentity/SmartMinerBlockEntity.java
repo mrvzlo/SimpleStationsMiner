@@ -25,7 +25,7 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
         if (type == null || type == SmartMinerType.Unknown)
             return;
 
-        ItemStack slot = inventory.getStackInSlot(1);
+        ItemStack slot = inventory.getStackInSlot(OUTPUT_SLOT);
         boolean working = slot.getCount() < slot.getMaxStackSize()
                 && (slot.getCount() == 0 || slot.getItem() == type.minedItem);
         setWorking(working);
@@ -39,7 +39,7 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
         progress = 0;
         ItemStack toAdd = new ItemStack(type.minedItem);
         toAdd.setCount(slot.getCount() + INCREMENT);
-        inventory.setStackInSlot(1, toAdd);
+        inventory.setStackInSlot(OUTPUT_SLOT, toAdd);
 
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         setChanged();
@@ -67,10 +67,9 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
     }
 
     private SmartMinerType getType(Item item) {
-        for (SmartMinerType t : SmartMinerType.values()) {
+        for (SmartMinerType t : SmartMinerType.values())
             if (t.minedItem == item)
                 return t;
-        }
         return SmartMinerType.Unknown;
     }
 }

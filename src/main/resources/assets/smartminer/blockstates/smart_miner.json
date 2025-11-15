@@ -1,6 +1,6 @@
 {
   "variants": {
-    "type=unknown": { "model": "smartminer:block/miner" },
+    "type=unknown": { "model": "smartminer:block/smart_miner" },
     "working=true,type=iron": { "model": "smartminer:block/iron_miner" },
     "working=false,type=iron": { "model": "smartminer:block/iron_miner_stop" },
     "working=true,type=gold": { "model": "smartminer:block/gold_miner" },

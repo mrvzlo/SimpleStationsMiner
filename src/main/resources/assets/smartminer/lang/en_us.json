@@ -1,9 +1,6 @@
 {
-  "itemGroup.smartminer": "Example Mod Tab",
-  "block.smartminer.example_block": "Example Block",
-  "item.smartminer.example_item": "Example Item",
-  "block.smartminer.iron_miner": "Iron Miner",
-  "block.smartminer.gold_miner": "Gold Miner",
+  "itemGroup.smartminer": "Smart Miner Mod Tab",
+  "block.smartminer.smart_miner": "Smart Miner",
 
   "smartminer.configuration.title": "SmartMiner Configs",
   "smartminer.configuration.section.smartminer.common.toml": "SmartMiner Configs",
