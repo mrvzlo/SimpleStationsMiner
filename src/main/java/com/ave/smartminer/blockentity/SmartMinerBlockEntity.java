@@ -1,23 +1,25 @@
-package com.ave.smartminer;
+package com.ave.smartminer.blockentity;
+
+import com.ave.smartminer.SmartMiner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AutoMinerBlockEntity extends AutoMinerContainer {
+public class SmartMinerBlockEntity extends SmartMinerContainer {
     private int progress = 0;
-    private static final int MAX_PROGRESS = 10; // каждые 5 секунд при 20 TPS
-    public AutoMinerType type;
+    private static final int MAX_PROGRESS = 100;
+    public SmartMinerType type;
 
-    public AutoMinerBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MINER_BLOCK_ENTITY.get(), pos, state, 1);
+    public SmartMinerBlockEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.MINER_BLOCK_ENTITY.get(), pos, state, 3);
     }
 
     public void tick() {
-        if (level.isClientSide || type == null || type == AutoMinerType.Unknown)
+        if (level.isClientSide || type == null || type == SmartMinerType.Unknown)
             return;
 
-        ItemStack slot = this.getItem(0);
+        ItemStack slot = inventory.getStackInSlot(1);
         boolean working = slot.getCount() < slot.getMaxStackSize();
         setWorking(working);
         if (!working)
@@ -30,7 +32,7 @@ public class AutoMinerBlockEntity extends AutoMinerContainer {
         progress = 0;
         ItemStack toAdd = new ItemStack(type.minedItem);
         toAdd.setCount(slot.getCount() + 16);
-        this.setItem(0, toAdd);
+        inventory.setStackInSlot(0, toAdd);
 
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         setChanged();
@@ -39,8 +41,8 @@ public class AutoMinerBlockEntity extends AutoMinerContainer {
 
     public void setWorking(boolean working) {
         BlockState state = level.getBlockState(worldPosition);
-        if (state.hasProperty(AutoMinerBlock.WORKING) && state.getValue(AutoMinerBlock.WORKING) == working)
+        if (state.hasProperty(SmartMinerBlock.WORKING) && state.getValue(SmartMinerBlock.WORKING) == working)
             return;
-        level.setBlock(worldPosition, state.setValue(AutoMinerBlock.WORKING, working), 3);
+        level.setBlock(worldPosition, state.setValue(SmartMinerBlock.WORKING, working), 3);
     }
 }

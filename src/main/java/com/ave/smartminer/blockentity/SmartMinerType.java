@@ -1,17 +1,17 @@
-package com.ave.smartminer;
+package com.ave.smartminer.blockentity;
 
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-public enum AutoMinerType implements StringRepresentable {
+public enum SmartMinerType implements StringRepresentable {
     Unknown(null),
     IRON(Items.RAW_IRON),
     GOLD(Items.RAW_GOLD);
 
     public final Item minedItem;
 
-    AutoMinerType(Item item) {
+    SmartMinerType(Item item) {
         this.minedItem = item;
     }
 

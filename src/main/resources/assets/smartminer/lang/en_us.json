@@ -3,6 +3,7 @@
   "block.smartminer.example_block": "Example Block",
   "item.smartminer.example_item": "Example Item",
   "block.smartminer.iron_miner": "Iron Miner",
+  "block.smartminer.gold_miner": "Gold Miner",
 
   "smartminer.configuration.title": "SmartMiner Configs",
   "smartminer.configuration.section.smartminer.common.toml": "SmartMiner Configs",
