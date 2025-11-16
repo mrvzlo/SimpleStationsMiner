@@ -1,6 +1,7 @@
 package com.ave.smartminer.blockentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 
 import com.ave.smartminer.SmartMiner;
+import com.ave.smartminer.blockentity.partblock.PartBlock;
 import com.ave.smartminer.blockentity.partblock.PartBlockEntity;
 
 public class SmartMinerBlock extends Block implements EntityBlock {
@@ -78,11 +80,26 @@ public class SmartMinerBlock extends Block implements EntityBlock {
                 if (p.equals(pos))
                     continue;
 
-                level.setBlock(p, SmartMiner.SMART_PART_BLOCK.get().defaultBlockState(), 3);
+                BlockState block = (dx == 0 || dz == 0 ? SmartMiner.SMART_MINER_EDGE : SmartMiner.SMART_MINER_CORNER)
+                        .get().defaultBlockState();
+                level.setBlock(p, block.setValue(PartBlock.FACING, getDirection(dx, dz)), 3);
 
                 PartBlockEntity be = (PartBlockEntity) level.getBlockEntity(p);
                 be.setControllerPos(pos);
             }
+    }
+
+    private Direction getDirection(int dx, int dz) {
+        if (dx == 1 && dz == 1)
+            return Direction.WEST;
+        if (dx == -1 && dz == 1)
+            return Direction.NORTH;
+        if (dx == 1 && dz == -1)
+            return Direction.SOUTH;
+        if (dx == -1 && dz == -1)
+            return Direction.EAST;
+
+        return dx == 0 ? Direction.EAST : Direction.NORTH;
     }
 
     @Override

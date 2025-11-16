@@ -24,4 +24,19 @@ public enum SmartMinerType implements StringRepresentable {
     public String getSerializedName() {
         return this.name().toLowerCase();
     }
+
+    public static SmartMinerType findMatch(Item item) {
+        for (SmartMinerType t : SmartMinerType.values())
+            if (t.minedItem == item)
+                return t;
+        return SmartMinerType.Unknown;
+    }
+
+    public static SmartMinerType findMatch(String item) {
+        for (SmartMinerType t : SmartMinerType.values()) {
+            if (t.getSerializedName().equals(item.toLowerCase()))
+                return t;
+        }
+        return SmartMinerType.Unknown;
+    }
 }

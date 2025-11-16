@@ -1,8 +1,11 @@
 package com.ave.smartminer.blockentity;
 
-import com.ave.smartminer.SmartMiner;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,10 +22,10 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
     }
 
     public void tick() {
-        checkNewType();
         if (level.isClientSide)
             return;
 
+        checkNewType();
         if (type == null || type == SmartMinerType.Unknown)
             return;
 
@@ -42,23 +45,39 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
         inventory.setStackInSlot(OUTPUT_SLOT, toAdd);
 
         setChanged();
-        SmartMiner.LOGGER.info("Added");
     }
 
     private void checkNewType() {
         Item slot = inventory.getStackInSlot(2).getItem();
-        SmartMinerType newType = getType(slot);
+        SmartMinerType newType = SmartMinerType.findMatch(slot);
         if (type == newType)
             return;
 
         type = newType;
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         progress = 0;
     }
 
-    private SmartMinerType getType(Item item) {
-        for (SmartMinerType t : SmartMinerType.values())
-            if (t.minedItem == item)
-                return t;
-        return SmartMinerType.Unknown;
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putString("type", type.getSerializedName());
+    }
+
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        String typeStr = tag.getString("type");
+        type = SmartMinerType.findMatch(typeStr);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

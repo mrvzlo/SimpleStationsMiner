@@ -5,6 +5,7 @@ import com.ave.smartminer.blockentity.SmartMinerBlock;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -12,22 +13,36 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class PartBlock extends Block implements EntityBlock {
 
     public static final BlockPos ZERO = new BlockPos(0, 0, 0);
     public static final MapCodec<BlockPos> CONTROLLER_POS_CODEC = BlockPos.CODEC.fieldOf("controller");
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty EDGE = BooleanProperty.create("edge");
 
-    public PartBlock(Properties props) {
+    public PartBlock(Properties props, boolean edge) {
         super(props);
+        this.registerDefaultState(
+                this.stateDefinition.any()
+                        .setValue(FACING, Direction.NORTH).setValue(EDGE, edge));
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PartBlockEntity(pos, state);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, EDGE);
     }
 
     @Override
@@ -58,9 +73,8 @@ public class PartBlock extends Block implements EntityBlock {
         if (state.getBlock() != newState.getBlock()) {
             BlockPos controllerPos = part.getControllerPos();
             BlockState controllerState = level.getBlockState(controllerPos);
-            if (controllerState.getBlock() instanceof SmartMinerBlock) {
+            if (controllerState.getBlock() instanceof SmartMinerBlock)
                 level.destroyBlock(controllerPos, true);
-            }
         }
         super.onRemove(state, level, pos, newState, moved);
     }

@@ -5,8 +5,5 @@
   "smartminer.configuration.title": "SmartMiner Configs",
   "smartminer.configuration.section.smartminer.common.toml": "SmartMiner Configs",
   "smartminer.configuration.section.smartminer.common.toml.title": "SmartMiner Configs",
-  "smartminer.configuration.items": "Item List",
-  "smartminer.configuration.logDirtBlock": "Log Dirt Block",
-  "smartminer.configuration.magicNumberIntroduction": "Magic Number Text",
-  "smartminer.configuration.magicNumber": "Magic Number"
+  "smartminer.configuration.items": "Item List"
 }

@@ -1,3 +1,8 @@
 {
-  "parent": "smartminer:block/smart_miner"
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "top": "smartminer:block/miner_top",
+    "bottom": "smartminer:block/miner_top",
+    "side": "smartminer:block/miner"
+  }
 }

@@ -20,10 +20,10 @@ public class ModBlockEntities {
                                                         .build(null));
 
         public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PartBlockEntity>> PART_BLOCK_ENTITY = BLOCK_ENTITIES
-                        .register("smart_part",
+                        .register("smart_miner_part",
                                         () -> BlockEntityType.Builder
                                                         .of(PartBlockEntity::new,
-                                                                        SmartMiner.SMART_PART_BLOCK.get())
+                                                                        SmartMiner.SMART_MINER_CORNER.get(),
+                                                                        SmartMiner.SMART_MINER_EDGE.get())
                                                         .build(null));
-
 }
