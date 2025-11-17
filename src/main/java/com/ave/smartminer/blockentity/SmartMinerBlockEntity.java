@@ -3,13 +3,14 @@ package com.ave.smartminer.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SmartMinerBlockEntity extends SmartMinerContainer {
-    public static final int FUEL_CAPACITY = 1200;
     public static final int MAX_PROGRESS = 400;
+    public static final int FUEL_CAPACITY = MAX_PROGRESS * 50;
     private static final int INCREMENT = 1;
     public SmartMinerType type = SmartMinerType.Unknown;
     public int progress = 0;
@@ -56,7 +57,7 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
 
     private boolean checkFuel() {
         ItemStack fuelStack = inventory.getStackInSlot(FUEL_SLOT);
-        int fuelPerCoal = 300;
+        int fuelPerCoal = MAX_PROGRESS * 5;
         if (fuelStack.isEmpty() || fuel + fuelPerCoal > FUEL_CAPACITY)
             return false;
 

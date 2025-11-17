@@ -3,6 +3,7 @@ package com.ave.smartminer.blockentity.handlers;
 import com.ave.smartminer.blockentity.SmartMinerBlockEntity;
 import com.ave.smartminer.blockentity.SmartMinerContainer;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -17,7 +18,8 @@ public class SidedItemHandler extends ItemStackHandler {
     public boolean isItemValid(int slot, ItemStack stack) {
         if (slot == SmartMinerContainer.OUTPUT_SLOT)
             return false;
-        if (slot == SmartMinerBlockEntity.FUEL_SLOT && stack.getItem() != Items.COAL)
+        if (slot == SmartMinerBlockEntity.FUEL_SLOT && stack.getItem() != Items.COAL
+                && stack.getItem() != Items.CHARCOAL)
             return false;
         return super.isItemValid(slot, stack);
     }
@@ -25,5 +27,9 @@ public class SidedItemHandler extends ItemStackHandler {
     @Override
     protected int getStackLimit(int slot, ItemStack stack) {
         return super.getStackLimit(slot, stack);
+    }
+
+    public NonNullList<ItemStack> getAsList() {
+        return stacks;
     }
 }

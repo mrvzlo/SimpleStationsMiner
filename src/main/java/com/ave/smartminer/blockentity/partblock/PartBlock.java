@@ -50,13 +50,14 @@ public class PartBlock extends Block implements EntityBlock {
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof PartBlockEntity part))
             return;
-
-        if (state.getBlock() != newState.getBlock()) {
-            BlockPos controllerPos = part.getControllerPos();
-            BlockState controllerState = level.getBlockState(controllerPos);
-            if (controllerState.getBlock() instanceof SmartMinerBlock)
-                level.destroyBlock(controllerPos, true);
-        }
         super.onRemove(state, level, pos, newState, moved);
+
+        if (state.getBlock() == newState.getBlock())
+            return;
+        BlockPos controllerPos = part.getControllerPos();
+        BlockState controllerState = level.getBlockState(controllerPos);
+        if (controllerState.getBlock() instanceof SmartMinerBlock)
+            level.destroyBlock(controllerPos, true);
+
     }
 }

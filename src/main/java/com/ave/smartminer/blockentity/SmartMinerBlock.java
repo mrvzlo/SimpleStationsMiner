@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -110,11 +111,22 @@ public class SmartMinerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
-        super.onRemove(state, level, pos, newState, moving);
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        return super.playerWillDestroy(level, pos, state, player);
+    }
 
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moving) {
         if (level.isClientSide)
             return;
+
+        BlockEntity controller = level.getBlockEntity(pos);
+        if (controller instanceof SmartMinerBlockEntity miner) {
+            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(),
+                    new ItemStack(SmartMiner.SMART_MINER_BLOCK, 1));
+            Containers.dropContents(level, pos, miner.inventory.getAsList());
+        }
+        super.onRemove(state, level, pos, newState, moving);
 
         for (int dx = -1; dx <= 1; dx++)
             for (int dz = -1; dz <= 1; dz++) {
