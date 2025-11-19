@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class PartBlockEntity extends BlockEntity {
@@ -52,6 +53,11 @@ public class PartBlockEntity extends BlockEntity {
         if (side == Direction.DOWN)
             return new OutputItemHandler(inventory);
         return new InputItemHandler(inventory);
+    }
+
+    public EnergyStorage getEnergyStorage(PartBlockEntity be) {
+        return ((SmartMinerBlockEntity) be.getLevel()
+                .getBlockEntity(be.controllerPos)).fuel;
     }
 
     @Override

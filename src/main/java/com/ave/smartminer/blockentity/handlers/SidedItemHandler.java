@@ -11,7 +11,6 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class SidedItemHandler extends ItemStackHandler {
-
     public SidedItemHandler(int size) {
         super(size);
     }

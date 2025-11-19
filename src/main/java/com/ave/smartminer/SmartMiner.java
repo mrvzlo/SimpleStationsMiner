@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 
 import com.ave.smartminer.blockentity.ModBlockEntities;
 import com.ave.smartminer.blockentity.SmartMinerBlock;
+import com.ave.smartminer.blockentity.SmartMinerBlockEntity;
 import com.ave.smartminer.blockentity.partblock.PartBlock;
+import com.ave.smartminer.blockentity.partblock.PartBlockEntity;
 import com.ave.smartminer.screen.ModMenuTypes;
 import com.ave.smartminer.sound.ModSounds;
 import com.mojang.logging.LogUtils;
@@ -21,6 +23,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -74,6 +78,7 @@ public class SmartMiner {
                 ModSounds.SOUND_EVENTS.register(modEventBus);
 
                 modEventBus.addListener(this::addCreative);
+                modEventBus.addListener(this::registerCapabilities);
                 modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         }
 
@@ -81,5 +86,15 @@ public class SmartMiner {
         private void addCreative(BuildCreativeModeTabContentsEvent event) {
                 if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
                         event.accept(SMART_MINER_BLOCK_ITEM);
+        }
+
+        private void registerCapabilities(RegisterCapabilitiesEvent event) {
+                event.registerBlock(Capabilities.EnergyStorage.BLOCK,
+                                (level, pos, state, be, side) -> ((SmartMinerBlockEntity) be).fuel,
+                                SMART_MINER_BLOCK.get());
+                event.registerBlock(Capabilities.EnergyStorage.BLOCK,
+                                (level, pos, state, be, side) -> ((PartBlockEntity) be)
+                                                .getEnergyStorage((PartBlockEntity) be),
+                                SMART_MINER_PART.get());
         }
 }
