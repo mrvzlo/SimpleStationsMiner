@@ -11,7 +11,7 @@
   "screen.simplestationsminer.recipes": "Miner recipes",
   "screen.simplestationsminer.fuel": "Energy",
   "screen.simplestationsminer.coolant": "Coolant",
-  "screen.simplestationsminer.catalysis": "Catalysis",
+  "screen.simplestationsminer.catalysis": "Catalyst",
   "screen.simplestationsminer.filter": "Ore block to mine",
   "screen.simplestationsminer.depthError": "Altitude is too high"
 }

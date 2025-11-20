@@ -14,15 +14,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.EnergyStorage;
 
 public class MinerBlockEntity extends ModContainer {
-    public static final int ENERGY_PER_TICK = 100;
-    public static final int MAX_PROGRESS = 400;
+    public static final int ENERGY_PER_TICK = 16;
+    public static final int MAX_PROGRESS = 1000;
     public static final int MAX_COOLANT = 20;
     public static final int MAX_REDSTONE = 20;
     public static final int ENERGY_PER_PROGRESS = MAX_PROGRESS * ENERGY_PER_TICK;
 
     private static final int FUEL_PER_COAL = ENERGY_PER_PROGRESS * 3;
     public static final int FUEL_CAPACITY = FUEL_PER_COAL * 10;
-    private static final int INCREMENT = 1;
     public EnergyStorage fuel = new EnergyStorage(FUEL_CAPACITY);
     public Item type = null;
     public float progress = 0;
@@ -79,10 +78,10 @@ public class MinerBlockEntity extends ModContainer {
             return false;
         if (fuel.getEnergyStored() < ENERGY_PER_TICK)
             return false;
-        if (slot.getCount() + outputSize > slot.getMaxStackSize())
-            return false;
         if (slot.getCount() == 0)
             return true;
+        if (slot.getCount() + outputSize > slot.getMaxStackSize())
+            return false;
         return slot.getItem().equals(type);
     }
 
@@ -133,12 +132,16 @@ public class MinerBlockEntity extends ModContainer {
     public static int getOutputSize(Item item) {
         if (item == null)
             return 1;
-        boolean isCheap = item.equals(Items.SAND) || item.equals(Items.STONE) || item.equals(Items.GRAVEL)
-                || item.equals(Items.COAL_ORE) || item.equals(Items.DEEPSLATE_COAL_ORE)
-                || item.equals(Items.COPPER_ORE) || item.equals(Items.DEEPSLATE_COPPER_ORE)
-                || item.equals(Items.NETHER_QUARTZ_ORE);
 
-        return isCheap ? INCREMENT + 1 : INCREMENT;
+        if (item.equals(Items.SAND) || item.equals(Items.STONE) || item.equals(Items.GRAVEL))
+            return 8;
+
+        if (item.equals(Items.COAL_ORE) || item.equals(Items.DEEPSLATE_COAL_ORE)
+                || item.equals(Items.COPPER_ORE) || item.equals(Items.DEEPSLATE_COPPER_ORE)
+                || item.equals(Items.NETHER_QUARTZ_ORE))
+            return 2;
+
+        return 1;
     }
 
     private int getSpeedMod() {
