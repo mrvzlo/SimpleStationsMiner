@@ -28,7 +28,7 @@ public class SmartMinerRenderer implements BlockEntityRenderer<SmartMinerBlockEn
             int overlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        if (be.type == null || !be.working)
+        if (be.type == null)
             return;
 
         ItemStack stack = new ItemStack(be.type);

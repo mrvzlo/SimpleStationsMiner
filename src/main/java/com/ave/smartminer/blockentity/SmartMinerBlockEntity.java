@@ -38,22 +38,17 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
         if (level.isClientSide || invalidDepth)
             return;
 
-        if (progress > MAX_PROGRESS)
+        if (progress >= MAX_PROGRESS)
             progress -= MAX_PROGRESS;
 
         checkNewType();
         checkResource(FUEL_SLOT, Items.COAL_BLOCK, FUEL_PER_COAL, FUEL_CAPACITY, ResourceType.FUEL);
         checkResource(REDSTONE_SLOT, Items.REDSTONE_BLOCK, 1, MAX_REDSTONE, ResourceType.REDSTONE);
         checkResource(COOLANT_SLOT, Items.LAPIS_BLOCK, 1, MAX_COOLANT, ResourceType.COOLANT);
-        if (type == null)
-            return;
-
         ItemStack slot = inventory.getStackInSlot(OUTPUT_SLOT);
-        working = fuel.getEnergyStored() >= ENERGY_PER_TICK && coolant > 0 && redstone > 0
-                && slot.getCount() < slot.getMaxStackSize()
-                && (slot.getCount() == 0 || slot.getItem() == type);
+        working = getWorking(slot);
 
-        if (!working)
+        if (type == null || !working)
             return;
 
         progress++;
@@ -69,6 +64,20 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
         toAdd.setCount(slot.getCount() + (isCheap() ? INCREMENT + 1 : INCREMENT));
         inventory.setStackInSlot(OUTPUT_SLOT, toAdd);
         setChanged();
+    }
+
+    private boolean getWorking(ItemStack slot) {
+        if (type == null)
+            return false;
+        if (coolant < 1 || redstone < 1)
+            return false;
+        if (fuel.getEnergyStored() < ENERGY_PER_TICK)
+            return false;
+        if (slot.getCount() >= slot.getMaxStackSize())
+            return false;
+        if (slot.getCount() == 0)
+            return true;
+        return slot.getItem().equals(type);
     }
 
     private boolean checkResource(int slot, Item blockItem, int singleValue, int maxCapacity, ResourceType type) {
@@ -116,23 +125,26 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
                 || type.equals(Items.IRON_ORE);
     }
 
-    private boolean checkNewType() {
+    private void checkNewType() {
         Item newType = getCurrentFilter();
         if (type == null && newType == null || type != null && type.equals(newType))
-            return false;
+            return;
 
         type = newType;
         progress = 0;
-        return true;
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putInt("fuel", fuel.getEnergyStored());
-        tag.putInt("progress", progress);
-        tag.putInt("coolant", coolant);
-        tag.putInt("redstone", redstone);
+        saveAll(tag);
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+        super.handleUpdateTag(tag, registries);
+        saveAll(tag);
     }
 
     @Override
@@ -143,6 +155,13 @@ public class SmartMinerBlockEntity extends SmartMinerContainer {
         progress = tag.getInt("progress");
         coolant = tag.getInt("coolant");
         redstone = tag.getInt("redstone");
+    }
+
+    private void saveAll(CompoundTag tag) {
+        tag.putInt("fuel", fuel.getEnergyStored());
+        tag.putInt("progress", progress);
+        tag.putInt("coolant", coolant);
+        tag.putInt("redstone", redstone);
     }
 
     private Item getCurrentFilter() {
