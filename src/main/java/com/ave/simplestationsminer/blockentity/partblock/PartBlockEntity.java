@@ -1,88 +1,74 @@
 package com.ave.simplestationsminer.blockentity.partblock;
 
-import com.ave.simplestationsminer.blockentity.ModBlockEntities;
+import org.jetbrains.annotations.Nullable;
+
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
-import com.ave.simplestationsminer.blockentity.handlers.InputItemHandler;
-import com.ave.simplestationsminer.blockentity.handlers.OutputItemHandler;
-import com.ave.simplestationsminer.blockentity.handlers.SidedItemHandler;
+import com.ave.simplestationsminer.blockentity.handlers.MinerSidedInventory;
+import com.ave.simplestationsminer.registrations.Registrations;
+import com.ave.simplestationsminer.screen.MinerScreenHandler;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 
-public class PartBlockEntity extends BlockEntity {
+public class PartBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPos>, MinerSidedInventory {
 
     private BlockPos controllerPos;
 
     public PartBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.PART_BLOCK_ENTITY.get(), pos, state);
+        super(Registrations.PART_BLOCK_ENTITY, pos, state);
     }
 
     public void setControllerPos(BlockPos pos) {
         controllerPos = pos;
-        setChanged();
-        if (level == null || level.isClientSide)
+        if (world == null || world.isClient)
             return;
-        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
 
     public BlockPos getControllerPos() {
         return controllerPos;
     }
 
-    public static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
-                ModBlockEntities.PART_BLOCK_ENTITY.get(),
-                (be, direction) -> be.getItemHandler(direction, be));
-    }
-
-    public IItemHandler getItemHandler(Direction side, PartBlockEntity be) {
-        SidedItemHandler inventory = ((MinerBlockEntity) be.getLevel()
-                .getBlockEntity(be.controllerPos)).inventory;
-        if (side == Direction.DOWN)
-            return new OutputItemHandler(inventory);
-        return new InputItemHandler(inventory);
-    }
-
-    public EnergyStorage getEnergyStorage(PartBlockEntity be) {
-        return ((MinerBlockEntity) be.getLevel()
-                .getBlockEntity(be.controllerPos)).fuel;
+    public DefaultedList<ItemStack> getItems() {
+        MinerBlockEntity controller = (MinerBlockEntity) world.getBlockEntity(controllerPos);
+        return controller.getItems();
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        if (controllerPos == null)
-            return;
-        tag.putLong("Controller", controllerPos.asLong());
+    public Text getDisplayName() {
+        return Text.translatable("screen.simplestationsminer.miner");
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new MinerScreenHandler(syncId, playerInventory, this.controllerPos);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        controllerPos = BlockPos.of(tag.getLong("Controller"));
+    public BlockPos getScreenOpeningData(ServerPlayerEntity player) {
+        return this.controllerPos;
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
+        controllerPos = BlockPos.fromLong(nbt.getLong("controller"));
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        nbt.putLong("controller", controllerPos.asLong());
+        super.writeNbt(nbt, registryLookup);
     }
 }

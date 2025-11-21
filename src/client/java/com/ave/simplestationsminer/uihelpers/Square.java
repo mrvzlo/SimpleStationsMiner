@@ -1,7 +1,8 @@
 package com.ave.simplestationsminer.uihelpers;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.font.Font;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 
 public class Square {
     public final int left;
@@ -28,7 +29,7 @@ public class Square {
         return x < right && x >= left && y >= top && y < bottom;
     }
 
-    public void drawBorder(GuiGraphics g, int x, int y, int color) {
+    public void drawBorder(DrawContext g, int x, int y, int color) {
         x += left;
         y += top;
         g.fill(x, y, x + width, y + 1, color);
@@ -37,17 +38,17 @@ public class Square {
         g.fill(x + width - 1, y, x + width, y + height, color);
     }
 
-    public void drawProgressToRight(GuiGraphics g, int x, int y, float percent, int color) {
+    public void drawProgressToRight(DrawContext g, int x, int y, float percent, int color) {
         int end = left + (int) Math.round(percent * width);
         g.fill(x + left, y + top, x + end, y + bottom, color);
     }
 
-    public void drawProgressToTop(GuiGraphics g, int x, int y, float percent, int color) {
+    public void drawProgressToTop(DrawContext g, int x, int y, float percent, int color) {
         int start = bottom - (int) Math.round(percent * height);
         g.fill(x + left, y + start, x + right, y + bottom, color);
     }
 
-    public void drawText(GuiGraphics g, int x, int y, Font font, int color, String text) {
-        g.drawString(font, text, x + left, y + top, color, false);
+    public void drawText(DrawContext dc, TextRenderer textRenderer, int x, int y, int color, String text) {
+        dc.drawText(textRenderer, text, x + left, y + top, color, false);
     }
 }

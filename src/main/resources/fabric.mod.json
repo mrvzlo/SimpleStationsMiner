@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "simplestationsminer",
+  "version": "${version}",
+  "name": "SimpleStationsMiner",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": ["AndrejevVE"],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "MIT",
+  "icon": "assets/simplestationsminer/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.ave.simplestationsminer.SimpleStationsMiner"],
+    "client": ["com.ave.simplestationsminer.SimpleStationsMinerClient"],
+    "fabric-datagen": ["com.ave.simplestationsminer.SimpleStationsMinerDataGenerator"]
+  },
+  "mixins": [
+    "simplestationsminer.mixins.json",
+    {
+      "config": "simplestationsminer.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

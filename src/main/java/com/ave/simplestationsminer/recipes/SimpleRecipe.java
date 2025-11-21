@@ -1,6 +1,6 @@
 package com.ave.simplestationsminer.recipes;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.item.ItemStack;
 
 public class SimpleRecipe {
     public final int energy;
