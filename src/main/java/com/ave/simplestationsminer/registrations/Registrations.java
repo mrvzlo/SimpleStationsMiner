@@ -59,7 +59,6 @@ public class Registrations {
                         new ExtendedScreenHandlerType<>(MinerScreenHandler::new, BlockPos.PACKET_CODEC));
 
         public static void initialize() {
-                SimpleStationsMiner.LOGGER.info("All registered");
                 Registry.register(Registries.ITEM_GROUP, CUSTOM_ITEM_GROUP_KEY, CUSTOM_ITEM_GROUP);
                 ItemGroupEvents.modifyEntriesEvent(CUSTOM_ITEM_GROUP_KEY).register(itemGroup -> {
                         itemGroup.add(MINER_BLOCK);

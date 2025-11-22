@@ -1,6 +1,5 @@
 package com.ave.simplestationsminer.blockentity.handlers;
 
-import com.ave.simplestationsminer.SimpleStationsMiner;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
 import com.ave.simplestationsminer.registrations.Registrations;
 
@@ -50,8 +49,6 @@ public interface MinerSidedInventory extends SidedInventory {
 
     @Override
     default void setStack(int slot, ItemStack stack) {
-        SimpleStationsMiner.LOGGER.info("Put " + stack + " in " + slot + " " + stack.isIn(Registrations.MINEABLE_TAG));
-
         getItems().set(slot, stack);
         if (stack.getCount() > getMaxCountPerStack())
             stack.setCount(getMaxCountPerStack());
@@ -81,6 +78,18 @@ public interface MinerSidedInventory extends SidedInventory {
 
     @Override
     default boolean canInsert(int slot, ItemStack stack, Direction dir) {
+        if (slot == MinerBlockEntity.TYPE_SLOT && !getItems().get(MinerBlockEntity.TYPE_SLOT).isEmpty())
+            return false;
+
+        return MinerSidedInventory.canInsert(slot, stack);
+    }
+
+    @Override
+    default boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return slot == MinerBlockEntity.OUTPUT_SLOT;
+    }
+
+    static boolean canInsert(int slot, ItemStack stack) {
         if (slot == MinerBlockEntity.FUEL_SLOT)
             return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL || stack.getItem() == Items.COAL_BLOCK;
         if (slot == MinerBlockEntity.COOLANT_SLOT)
@@ -90,10 +99,5 @@ public interface MinerSidedInventory extends SidedInventory {
         if (slot == MinerBlockEntity.TYPE_SLOT)
             return stack.isIn(Registrations.MINEABLE_TAG);
         return false;
-    }
-
-    @Override
-    default boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return slot == MinerBlockEntity.OUTPUT_SLOT;
     }
 }

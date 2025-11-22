@@ -18,22 +18,23 @@ public class MinerScreen extends HandledScreen<MinerScreenHandler> {
     private static final Identifier TEXTURE = Identifier.of(SimpleStationsMiner.MOD_ID,
             "textures/gui/base_miner_gui.png");
 
-    private final MinerBlockEntity be;
+    private final MinerBlockEntity miner;
 
     public MinerScreen(MinerScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        be = handler.miner;
+        miner = handler.miner;
     }
 
     @Override
     public void render(DrawContext dc, int mouseX, int mouseY, float delta) {
         super.render(dc, mouseX, mouseY, delta);
+        drawMouseoverTooltip(dc, mouseX, mouseY);
 
         int startX = (width - backgroundWidth) / 2;
         int startY = (height - backgroundHeight) / 2;
 
         if (UIBlocks.FUEL_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            String fuelPart = NumToString.parse(be.fuel, "RF / ")
+            String fuelPart = NumToString.parse(handler.props.getFuel(), "RF / ")
                     + NumToString.parse(Config.FUEL_CAPACITY, "RF");
             List<Text> fuelText = Arrays.asList(Text.translatable("screen.simplestationsminer.fuel"),
                     Text.literal(fuelPart));
@@ -41,29 +42,29 @@ public class MinerScreen extends HandledScreen<MinerScreenHandler> {
         }
 
         if (UIBlocks.COOL_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            String coolantPart = be.coolant + " / " + Config.MAX_COOLANT;
+            String coolantPart = handler.props.getCoolant() + " / " + Config.MAX_COOLANT;
             List<Text> coolantText = Arrays.asList(Text.translatable("screen.simplestationsminer.coolant"),
                     Text.literal(coolantPart));
             dc.drawTooltip(textRenderer, coolantText, mouseX, mouseY);
         }
 
         if (UIBlocks.CATA_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            String redstonePart = be.redstone + " / " + Config.MAX_CATALYST;
+            String redstonePart = handler.props.getRedstone() + " / " + Config.MAX_CATALYST;
             List<Text> redstoneText = Arrays.asList(Text.translatable("screen.simplestationsminer.catalysis"),
                     Text.literal(redstonePart));
             dc.drawTooltip(textRenderer, redstoneText, mouseX, mouseY);
         }
 
-        if (be.progress > 0 && UIBlocks.PROGRESS_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            int progressPart = (int) Math.ceil(100 * be.progress / Config.MAX_PROGRESS);
+        if (handler.props.getProgress() > 0 && UIBlocks.PROGRESS_BAR.isHovered(mouseX - startX, mouseY - startY)) {
+            int progressPart = (int) Math.ceil(100 * handler.props.getProgress() / Config.MAX_PROGRESS);
             dc.drawTooltip(textRenderer, Text.literal(progressPart + "%"), mouseX, mouseY);
         }
 
-        if (be.type == null && UIBlocks.FILTER_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
+        if (miner.type == null && UIBlocks.FILTER_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
             dc.drawTooltip(textRenderer, Text.translatable("screen.simplestationsminer.filter"), mouseX, mouseY);
         }
 
-        if (be.invalidDepth && UIBlocks.ERROR.isHovered(mouseX - startX, mouseY - startY)) {
+        if (handler.props.isTooHigh() && UIBlocks.ERROR.isHovered(mouseX - startX, mouseY - startY)) {
             dc.drawTooltip(textRenderer, Text.translatable("screen.simplestationsminer.depthError"), mouseX, mouseY);
         }
     }
@@ -76,21 +77,21 @@ public class MinerScreen extends HandledScreen<MinerScreenHandler> {
 
         int tickAlpha = 96 + (int) (63 * Math.sin(System.currentTimeMillis() / 400.0));
         int borderColor = (tickAlpha << 24) | 0xFF0000;
-        float progressPart = be.progress / Config.MAX_PROGRESS;
+        float progressPart = (float) handler.props.getProgress() / Config.MAX_PROGRESS;
         UIBlocks.PROGRESS_BAR.drawProgressToRight(dc, x, y, progressPart, 0xFFCCFEDD);
 
-        if (be.invalidDepth) {
-            UIBlocks.ERROR.drawText(dc, textRenderer, x, y, borderColor, "Y > 20");
+        if (handler.props.isTooHigh()) {
+            UIBlocks.ERROR.drawText(dc, textRenderer, x, y, borderColor, "Y > " + Config.MAX_HEIGHT);
             return;
         }
 
-        float fuelPart = (float) be.fuel / Config.FUEL_CAPACITY;
+        float fuelPart = (float) handler.props.getFuel() / Config.FUEL_CAPACITY;
         UIBlocks.FUEL_BAR.drawProgressToTop(dc, x, y, fuelPart, 0xAA225522);
 
-        float coolantPart = (float) be.coolant / Config.MAX_COOLANT;
+        float coolantPart = (float) handler.props.getCoolant() / Config.MAX_COOLANT;
         UIBlocks.COOL_BAR.drawProgressToTop(dc, x, y, coolantPart, 0xAA3333AA);
 
-        float redstonePart = (float) be.redstone / Config.MAX_CATALYST;
+        float redstonePart = (float) handler.props.getRedstone() / Config.MAX_CATALYST;
         UIBlocks.CATA_BAR.drawProgressToTop(dc, x, y, redstonePart, 0xAABB2211);
 
         if (fuelPart == 0)

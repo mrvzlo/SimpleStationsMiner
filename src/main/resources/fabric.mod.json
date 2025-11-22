@@ -13,7 +13,8 @@
   "icon": "assets/simplestationsminer/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": ["com.ave.simplestationsminer.SimpleStationsMiner"]
+    "main": ["com.ave.simplestationsminer.SimpleStationsMiner"],
+    "client": ["com.ave.simplestationsminer.SimpleStationsMinerClient"]
   },
   "mixins": ["simplestationsminer.mixins.json"],
   "depends": {

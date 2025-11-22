@@ -17,9 +17,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -46,13 +48,13 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
     public static final int TYPE_SLOT = 2;
     public static final int COOLANT_SLOT = 3;
     public static final int REDSTONE_SLOT = 4;
-    public final PropertyDelegate propertyDelegate;
+    public final MinerPropertyDelegate props;
 
     public MinerBlockEntity(BlockPos pos, BlockState state) {
         super(Registrations.MINER_BLOCK_ENTITY, pos, state);
         if (pos != null)
-            invalidDepth = pos.getY() > 20;
-        this.propertyDelegate = MinerPropertyDelegate.create(this);
+            invalidDepth = pos.getY() > Config.MAX_HEIGHT;
+        this.props = MinerPropertyDelegate.create(this);
     }
 
     public DefaultedList<ItemStack> getItems() {
@@ -67,7 +69,7 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-        return new MinerScreenHandler(syncId, playerInventory, this.pos);
+        return new MinerScreenHandler(syncId, playerInventory, this, this.props);
     }
 
     @Override
@@ -104,7 +106,10 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
 
         coolant--;
         redstone--;
-        inventory.set(OUTPUT_SLOT, new ItemStack(type, outputSize));
+
+        ItemStack toAdd = new ItemStack(type);
+        toAdd.setCount(slot.getCount() + outputSize);
+        inventory.set(OUTPUT_SLOT, toAdd);
     }
 
     private boolean getWorking(ItemStack slot) {
@@ -207,7 +212,7 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
         progress = 0;
         speed = 1f / getSpeedMod();
         outputSize = getOutputSize();
-        world.setBlockState(getPos(), getCachedState(), 3, 0);
+        world.updateListeners(getPos(), getCachedState(), getCachedState(), 3);
     }
 
     @Override
@@ -220,6 +225,7 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
         redstone = nbt.getInt("redstone");
         speed = 1f / getSpeedMod();
         outputSize = getOutputSize();
+        invalidDepth = pos.getY() > Config.MAX_HEIGHT;
         Inventories.readNbt(nbt, inventory, registryLookup);
     }
 
@@ -231,6 +237,17 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
         nbt.putInt("redstone", redstone);
         Inventories.writeNbt(nbt, inventory, registryLookup);
         super.writeNbt(nbt, registryLookup);
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     private Item getCurrentFilter() {

@@ -14,7 +14,5 @@ public class SimpleStationsMiner implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		Registrations.initialize();
-
-		LOGGER.info("Hello Fabric world!");
 	}
 }

@@ -1,6 +1,5 @@
 {
   "variants": {
-    "": { "model": "simplestationsminer:block/miner" },
     "facing=north": { "model": "simplestationsminer:block/miner" },
     "facing=south": { "model": "simplestationsminer:block/miner", "y": 180 },
     "facing=east": { "model": "simplestationsminer:block/miner", "y": 90 },

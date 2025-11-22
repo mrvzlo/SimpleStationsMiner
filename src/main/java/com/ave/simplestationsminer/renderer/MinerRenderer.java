@@ -1,8 +1,14 @@
-package com.ave.simplestationsminer;
+package com.ave.simplestationsminer.renderer;
 
+import java.util.Optional;
+
+import com.ave.simplestationsminer.SimpleStationsMiner;
 import com.ave.simplestationsminer.blockentity.MinerBlock;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
+import com.ave.simplestationsminer.registrations.Registrations;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -22,13 +28,12 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
 
     @Override
     public void render(MinerBlockEntity be, float pt, MatrixStack m, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         if (be.type == null)
             return;
 
         ItemStack stack = new ItemStack(be.type);
-        Direction direction = be.getCachedState().get(MinerBlock.FACING);
+        Direction direction = getDirection(be);
         World world = be.getWorld();
         long gameTime = world.getTime() % 1000;
 
@@ -36,6 +41,18 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
         drawBlock(m, itemRenderer, stack, light, vertexConsumers, getZShift(gameTime, 250), 0.4f, direction, world);
         drawBlock(m, itemRenderer, stack, light, vertexConsumers, getZShift(gameTime, 500), 0.5f, direction, world);
         drawBlock(m, itemRenderer, stack, light, vertexConsumers, getZShift(gameTime, 750), 0.6f, direction, world);
+    }
+
+    private Direction getDirection(MinerBlockEntity be) {
+        BlockState state = be.getCachedState();
+        if (state == null)
+            return Direction.NORTH;
+        if (!state.isOf(Registrations.MINER_BLOCK))
+            return Direction.NORTH;
+        Optional<Direction> dir = state.getOrEmpty(MinerBlock.FACING);
+        if (dir.isEmpty())
+            return Direction.NORTH;
+        return dir.get();
     }
 
     private float getZShift(long gameTime, int delay) {

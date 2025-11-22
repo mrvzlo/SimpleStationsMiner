@@ -1,5 +1,7 @@
 package com.ave.simplestationsminer.uihelpers;
 
+import com.ave.simplestationsminer.SimpleStationsMiner;
+
 import net.minecraft.client.font.Font;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
