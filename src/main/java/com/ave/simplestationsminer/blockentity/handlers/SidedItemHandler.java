@@ -1,6 +1,6 @@
 package com.ave.simplestationsminer.blockentity.handlers;
 
-import com.ave.simplestationsminer.SimpleStationsMiner;
+import com.ave.simplestationsminer.Config;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
 import com.ave.simplestationsminer.blockentity.ModContainer;
 import com.ave.simplestationsminer.datagen.ModTags;
@@ -22,10 +22,13 @@ public class SidedItemHandler extends ItemStackHandler {
         if (slot == MinerBlockEntity.FUEL_SLOT)
             return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL
                     || stack.getItem() == Items.COAL_BLOCK;
+
         if (slot == MinerBlockEntity.COOLANT_SLOT)
-            return stack.getItem() == Items.LAPIS_BLOCK || stack.getItem() == Items.LAPIS_LAZULI;
+            return Config.isExtendedMod()
+                    && (stack.getItem() == Items.LAPIS_BLOCK || stack.getItem() == Items.LAPIS_LAZULI);
         if (slot == MinerBlockEntity.REDSTONE_SLOT)
-            return stack.getItem() == Items.REDSTONE_BLOCK || stack.getItem() == Items.REDSTONE;
+            return Config.isExtendedMod()
+                    && (stack.getItem() == Items.REDSTONE_BLOCK || stack.getItem() == Items.REDSTONE);
 
         if (slot == MinerBlockEntity.TYPE_SLOT)
             return stack.is(ModTags.Items.MINEABLE_TAG);

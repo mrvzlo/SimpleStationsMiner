@@ -20,6 +20,11 @@ public class Config {
         public static ModConfigSpec.IntValue FUEL_PER_COAL;
         public static ModConfigSpec.IntValue FUEL_CAPACITY;
         public static ModConfigSpec.IntValue MAX_Y;
+        public static ModConfigSpec.EnumValue<WorkMode> WORK_MODE;
+
+        public static boolean isExtendedMod() {
+                return WORK_MODE.get() == WorkMode.Extended;
+        }
 
         static {
                 setupGenerationConfig();
@@ -48,6 +53,9 @@ public class Config {
                 MAX_Y = BUILDER
                                 .comment("Highest Y for miner\n Default: 20")
                                 .defineInRange("max_y", 20, -1000, 1000);
+                WORK_MODE = BUILDER
+                                .comment("Extended work mode forces catalyst and coolant usage\n Default: Basic")
+                                .defineEnum("work_mode", WorkMode.Extended, WorkMode.Basic, WorkMode.Extended);
         }
 
         @SubscribeEvent

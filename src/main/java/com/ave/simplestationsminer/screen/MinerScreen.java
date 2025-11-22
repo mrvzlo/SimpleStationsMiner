@@ -20,6 +20,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(SimpleStationsMiner.MODID,
             "textures/gui/base_miner_gui.png");
+    private static final ResourceLocation TEXTURE_MIN = ResourceLocation.fromNamespaceAndPath(SimpleStationsMiner.MODID,
+            "textures/gui/base_miner_gui_min.png");
 
     public MinerScreen(MinerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -44,14 +46,14 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
             gfx.renderComponentTooltip(font, fuelText, mouseX, mouseY);
         }
 
-        if (UIBlocks.COOL_BAR.isHovered(mouseX - startX, mouseY - startY)) {
+        if (Config.isExtendedMod() && UIBlocks.COOL_BAR.isHovered(mouseX - startX, mouseY - startY)) {
             String coolantPart = miner.coolant + " / " + Config.MAX_COOLANT.get();
             List<Component> coolantText = Arrays.asList(Component.translatable("screen.simplestationsminer.coolant"),
                     Component.literal(coolantPart));
             gfx.renderComponentTooltip(font, coolantText, mouseX, mouseY);
         }
 
-        if (UIBlocks.CATA_BAR.isHovered(mouseX - startX, mouseY - startY)) {
+        if (Config.isExtendedMod() && UIBlocks.CATA_BAR.isHovered(mouseX - startX, mouseY - startY)) {
             String redstonePart = miner.redstone + " / " + Config.MAX_CATALYST.get();
             List<Component> redstoneText = Arrays.asList(Component.translatable("screen.simplestationsminer.catalysis"),
                     Component.literal(redstonePart));
@@ -76,10 +78,11 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
     protected void renderBg(GuiGraphics graphics, float tick, int mx, int my) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.setShaderTexture(0, Config.isExtendedMod() ? TEXTURE : TEXTURE_MIN);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-        graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+        graphics.blit(Config.isExtendedMod() ? TEXTURE : TEXTURE_MIN, x, y, 0, 0, imageWidth, imageHeight, imageWidth,
+                imageHeight);
 
         if (!(menu.blockEntity instanceof MinerBlockEntity miner))
             return;
@@ -96,6 +99,11 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
 
         float fuelPart = (float) miner.fuel.getEnergyStored() / Config.FUEL_CAPACITY.get();
         UIBlocks.FUEL_BAR.drawProgressToTop(graphics, x, y, fuelPart, 0xAA225522);
+        if (fuelPart == 0)
+            UIBlocks.FUEL_SLOT.drawBorder(graphics, x, y, borderColor);
+
+        if (!Config.isExtendedMod())
+            return;
 
         float coolantPart = (float) miner.coolant / Config.MAX_COOLANT.get();
         UIBlocks.COOL_BAR.drawProgressToTop(graphics, x, y, coolantPart, 0xAA3333AA);
@@ -103,8 +111,6 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
         float redstonePart = (float) miner.redstone / Config.MAX_CATALYST.get();
         UIBlocks.CATA_BAR.drawProgressToTop(graphics, x, y, redstonePart, 0xAABB2211);
 
-        if (fuelPart == 0)
-            UIBlocks.FUEL_SLOT.drawBorder(graphics, x, y, borderColor);
         if (coolantPart == 0)
             UIBlocks.COOL_SLOT.drawBorder(graphics, x, y, borderColor);
         if (redstonePart == 0)

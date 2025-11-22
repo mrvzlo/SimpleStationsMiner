@@ -43,8 +43,11 @@ public class MinerBlockEntity extends ModContainer {
         checkNewType();
         checkResource(FUEL_SLOT, Items.COAL_BLOCK, Config.FUEL_PER_COAL.get(), Config.FUEL_CAPACITY.get(),
                 ResourceType.FUEL);
-        checkResource(REDSTONE_SLOT, Items.REDSTONE_BLOCK, 1, Config.MAX_CATALYST.get(), ResourceType.REDSTONE);
-        checkResource(COOLANT_SLOT, Items.LAPIS_BLOCK, 1, Config.MAX_COOLANT.get(), ResourceType.COOLANT);
+
+        if (Config.isExtendedMod()) {
+            checkResource(REDSTONE_SLOT, Items.REDSTONE_BLOCK, 1, Config.MAX_CATALYST.get(), ResourceType.REDSTONE);
+            checkResource(COOLANT_SLOT, Items.LAPIS_BLOCK, 1, Config.MAX_COOLANT.get(), ResourceType.COOLANT);
+        }
         ItemStack slot = inventory.getStackInSlot(OUTPUT_SLOT);
         working = getWorking(slot);
 
@@ -58,8 +61,10 @@ public class MinerBlockEntity extends ModContainer {
         if (progress < Config.MAX_PROGRESS.get())
             return;
 
-        coolant--;
-        redstone--;
+        if (Config.isExtendedMod()) {
+            coolant--;
+            redstone--;
+        }
         ItemStack toAdd = new ItemStack(type);
         toAdd.setCount(slot.getCount() + outputSize);
         inventory.setStackInSlot(OUTPUT_SLOT, toAdd);
@@ -69,7 +74,7 @@ public class MinerBlockEntity extends ModContainer {
     private boolean getWorking(ItemStack slot) {
         if (type == null)
             return false;
-        if (coolant < 1 || redstone < 1)
+        if (Config.isExtendedMod() && (coolant < 1 || redstone < 1))
             return false;
         if (fuel.getEnergyStored() < Config.ENERGY_PER_TICK.get())
             return false;
