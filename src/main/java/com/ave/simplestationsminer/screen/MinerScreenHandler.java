@@ -85,15 +85,11 @@ public class MinerScreenHandler extends ScreenHandler {
         ItemStack originalStack = slot.getStack();
         newStack = originalStack.copy();
 
-        SimpleStationsMiner.LOGGER.info("SLOT: " + invSlot);
         if (invSlot < invSize) {
-            SimpleStationsMiner.LOGGER.info("1");
             if (!this.insertItem(originalStack, invSize, this.slots.size(), true)) {
-                SimpleStationsMiner.LOGGER.info("2");
                 return ItemStack.EMPTY;
             }
         } else if (!this.insertItem(originalStack, 0, invSize, false)) {
-            SimpleStationsMiner.LOGGER.info("3");
             return ItemStack.EMPTY;
         }
 
@@ -102,7 +98,6 @@ public class MinerScreenHandler extends ScreenHandler {
         } else {
             slot.markDirty();
         }
-        SimpleStationsMiner.LOGGER.info("4");
         return newStack;
     }
 
