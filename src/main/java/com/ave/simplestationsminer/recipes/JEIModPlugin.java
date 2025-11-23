@@ -54,7 +54,7 @@ public class JEIModPlugin implements IModPlugin {
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addRecipeClickArea(MinerScreen.class, UIBlocks.OUT_SLOT.left, UIBlocks.OUT_SLOT.top,
-                UIBlocks.OUT_SLOT.width, UIBlocks.OUT_SLOT.height, MinerRecipeCategory.REGULAR);
+        registration.addRecipeClickArea(MinerScreen.class, UIBlocks.OUT_SLOT.left - 16, 6,
+                UIBlocks.OUT_SLOT.width + 32, UIBlocks.OUT_SLOT.height, MinerRecipeCategory.REGULAR);
     }
 }

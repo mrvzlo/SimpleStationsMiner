@@ -73,7 +73,7 @@ public class MinerBlock extends Block implements EntityBlock {
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hit) {
         MinerBlockEntity blockEntity = (MinerBlockEntity) level.getBlockEntity(pos);
-        player.openMenu(new SimpleMenuProvider(blockEntity, Component.translatable("screen.simplestationsminer.miner")),
+        player.openMenu(new SimpleMenuProvider(blockEntity, Component.literal("")),
                 pos);
         return ItemInteractionResult.SUCCESS;
     }

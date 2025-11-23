@@ -84,6 +84,11 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
         graphics.blit(Config.isExtendedMod() ? TEXTURE : TEXTURE_MIN, x, y, 0, 0, imageWidth, imageHeight, imageWidth,
                 imageHeight);
 
+        Component title = Component.translatable("screen.simplestationsminer.miner");
+        int textWidth = font.width(title);
+        int centerX = (width / 2) - (textWidth / 2);
+        graphics.drawString(font, title, centerX, y + 6, 0x222222, false);
+
         if (!(menu.blockEntity instanceof MinerBlockEntity miner))
             return;
 
