@@ -1,6 +1,6 @@
 {
   "itemGroup.simplestationsminer": "Simple Mining Stations",
-  "block.simplestationsminer.miner": "Mining station",
+  "item.simplestationsminer.miner": "Mining station",
   "item.simplestationsminer.miner_drill": "Drill",
 
   "simplestationsminer.configuration.title": "Configs",

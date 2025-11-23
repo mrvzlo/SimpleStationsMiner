@@ -8,7 +8,7 @@ import com.ave.simplestationsminer.datagen.ModTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class SidedItemHandler extends ItemStackHandler {
     public SidedItemHandler(int size) {

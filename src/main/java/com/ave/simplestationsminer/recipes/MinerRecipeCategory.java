@@ -64,18 +64,24 @@ public class MinerRecipeCategory implements IRecipeCategory<SimpleRecipe> {
         }
 
         @Override
-        public void setRecipe(IRecipeLayoutBuilder builder, SimpleRecipe recipe, IFocusGroup focuses) {
+        public void setRecipe(IRecipeLayoutBuilder builder, SimpleRecipe recipe,
+                        IFocusGroup focuses) {
                 if (Config.isExtendedMod()) {
-                        builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.CATA_SLOT.left, UIBlocks.CATA_SLOT.top)
+                        builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.CATA_SLOT.left,
+                                        UIBlocks.CATA_SLOT.top)
                                         .addIngredients(Ingredient.of(Items.REDSTONE));
-                        builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.COOL_SLOT.left, UIBlocks.COOL_SLOT.top)
+                        builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.COOL_SLOT.left,
+                                        UIBlocks.COOL_SLOT.top)
                                         .addIngredients(Ingredient.of(Items.LAPIS_LAZULI));
                 }
-                builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.FUEL_SLOT.left, UIBlocks.FUEL_SLOT.top)
+                builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.FUEL_SLOT.left,
+                                UIBlocks.FUEL_SLOT.top)
                                 .addIngredients(Ingredient.of(Items.COAL));
-                builder.addSlot(RecipeIngredientRole.OUTPUT, UIBlocks.OUT_SLOT.left, UIBlocks.OUT_SLOT.top)
+                builder.addSlot(RecipeIngredientRole.OUTPUT, UIBlocks.OUT_SLOT.left,
+                                UIBlocks.OUT_SLOT.top)
                                 .addItemStack(new ItemStack(recipe.filter.getItem(), recipe.output));
-                builder.addSlot(RecipeIngredientRole.CATALYST, UIBlocks.FILTER_SLOT.left, UIBlocks.FILTER_SLOT.top)
+                builder.addSlot(RecipeIngredientRole.CATALYST, UIBlocks.FILTER_SLOT.left,
+                                UIBlocks.FILTER_SLOT.top)
                                 .addIngredients(Ingredient.of(recipe.filter.getItem()));
         }
 

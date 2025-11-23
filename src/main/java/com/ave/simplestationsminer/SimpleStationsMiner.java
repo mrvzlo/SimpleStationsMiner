@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 
 import com.ave.simplestationsminer.blockentity.ModBlockEntities;
 import com.ave.simplestationsminer.blockentity.MinerBlock;
-import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
 import com.ave.simplestationsminer.blockentity.partblock.PartBlock;
-import com.ave.simplestationsminer.blockentity.partblock.PartBlockEntity;
 import com.ave.simplestationsminer.screen.ModMenuTypes;
 import com.ave.simplestationsminer.sound.ModSounds;
 import com.mojang.logging.LogUtils;
@@ -17,47 +15,49 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(SimpleStationsMiner.MODID)
 public class SimpleStationsMiner {
         public static final String MODID = "simplestationsminer";
         public static final Logger LOGGER = LogUtils.getLogger();
-        public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-        public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+        public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
+        public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
         public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
                         .create(Registries.CREATIVE_MODE_TAB, MODID);
 
-        public static final DeferredBlock<Block> MINER_BLOCK = BLOCKS.register("miner",
+        public static final RegistryObject<Block> MINER_BLOCK = BLOCKS.register("miner",
                         () -> new MinerBlock(BlockBehaviour.Properties.of()
                                         .strength(0.1F).lightLevel((state) -> 12).noOcclusion()));
 
-        public static final DeferredBlock<Block> MINER_PART = BLOCKS.register("miner_part",
+        public static final RegistryObject<Block> MINER_PART = BLOCKS.register("miner_part",
                         () -> new PartBlock(BlockBehaviour.Properties.of()
                                         .strength(0.1F).noOcclusion()));
 
-        public static final DeferredItem<BlockItem> MINER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
-                        "miner",
-                        MINER_BLOCK);
+        public static final RegistryObject<BlockItem> MINER_BLOCK_ITEM = ITEMS.register(
+                        "miner", () -> new ItemNameBlockItem(MINER_BLOCK.get(), new Item.Properties()));
 
-        public static final DeferredItem<Item> MINER_DRILL = ITEMS.registerItem("miner_drill", Item::new,
-                        new Item.Properties());
+        public static final RegistryObject<Item> MINER_DRILL = ITEMS.register(
+                        "miner_drill", () -> new Item(new Item.Properties()));
 
-        public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
+        public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
                         .register("example_tab", () -> CreativeModeTab.builder()
                                         .title(Component.translatable("itemGroup.simplestationsminer")) // The language
                                                                                                         // key for
@@ -70,8 +70,15 @@ public class SimpleStationsMiner {
                                                 output.accept(MINER_DRILL.get());
                                         }).build());
 
-        public SimpleStationsMiner(IEventBus modEventBus, ModContainer modContainer) {
-                modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        public static final Capability<IItemHandler> ITEM = CapabilityManager.get(new CapabilityToken<>() {
+        });
+
+        public static final Capability<IEnergyStorage> ENERGY = CapabilityManager.get(new CapabilityToken<>() {
+        });
+
+        public SimpleStationsMiner(FMLJavaModLoadingContext context) {
+                IEventBus modEventBus = context.getModEventBus();
+                context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
                 BLOCKS.register(modEventBus);
                 ITEMS.register(modEventBus);
                 CREATIVE_MODE_TABS.register(modEventBus);
@@ -80,22 +87,11 @@ public class SimpleStationsMiner {
                 ModSounds.SOUND_EVENTS.register(modEventBus);
 
                 modEventBus.addListener(this::addCreative);
-                modEventBus.addListener(this::registerCapabilities);
         }
 
         // Add the example block item to the building blocks tab
         private void addCreative(BuildCreativeModeTabContentsEvent event) {
                 if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
                         event.accept(MINER_BLOCK_ITEM);
-        }
-
-        private void registerCapabilities(RegisterCapabilitiesEvent event) {
-                event.registerBlock(Capabilities.EnergyStorage.BLOCK,
-                                (level, pos, state, be, side) -> ((MinerBlockEntity) be).fuel,
-                                MINER_BLOCK.get());
-                event.registerBlock(Capabilities.EnergyStorage.BLOCK,
-                                (level, pos, state, be, side) -> ((PartBlockEntity) be)
-                                                .getEnergyStorage((PartBlockEntity) be),
-                                MINER_PART.get());
         }
 }

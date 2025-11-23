@@ -20,9 +20,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class ModContainer extends BlockEntity implements MenuProvider {
     public final SidedItemHandler inventory;
@@ -41,13 +39,6 @@ public class ModContainer extends BlockEntity implements MenuProvider {
                 setChanged();
             }
         };
-    }
-
-    public static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
-                ModBlockEntities.MINER_BLOCK_ENTITY.get(),
-                (be, direction) -> be.getItemHandler(direction));
     }
 
     public IItemHandler getItemHandler(Direction side) {

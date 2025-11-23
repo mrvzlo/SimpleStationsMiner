@@ -1,6 +1,6 @@
 {
   "itemGroup.simplestationsminer": "Простые Шахтёрские Станции",
-  "block.simplestationsminer.miner": "Шахтёрская станция",
+  "item.simplestationsminer.miner": "Шахтёрская станция",
   "item.simplestationsminer.miner_drill": "Бур",
 
   "simplestationsminer.configuration.title": "Настройки",

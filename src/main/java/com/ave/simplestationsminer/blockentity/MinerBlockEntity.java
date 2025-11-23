@@ -1,9 +1,12 @@
 package com.ave.simplestationsminer.blockentity;
 
 import com.ave.simplestationsminer.Config;
+import com.ave.simplestationsminer.blockentity.handlers.InputItemHandler;
+import com.ave.simplestationsminer.blockentity.handlers.OutputItemHandler;
 import com.ave.simplestationsminer.sound.ModSounds;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
@@ -12,10 +15,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.EnergyStorage;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandler;
 
 public class MinerBlockEntity extends ModContainer {
     public EnergyStorage fuel;
+    public int fuelHigh = 0;
+    public int fuelLow = 0;
     public Item type = null;
     public float progress = 0;
     public int coolant = 0;
@@ -51,6 +61,8 @@ public class MinerBlockEntity extends ModContainer {
         ItemStack slot = inventory.getStackInSlot(OUTPUT_SLOT);
         working = getWorking(slot);
 
+        fuelHigh = fuel.getEnergyStored() >> 16;
+        fuelLow = fuel.getEnergyStored() & 0xFFFF;
         if (type == null || !working)
             return;
 
@@ -172,6 +184,20 @@ public class MinerBlockEntity extends ModContainer {
         speed = 1f / getSpeedMod();
         outputSize = getOutputSize();
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+    }
+
+    private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this.fuel);
+    private final LazyOptional<IItemHandler> outputHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
+    private final LazyOptional<IItemHandler> inputHandler = LazyOptional.of(() -> new InputItemHandler(inventory));
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == ForgeCapabilities.ENERGY)
+            return energy.cast();
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return side.equals(Direction.DOWN) ? outputHandler.cast() : inputHandler.cast();
+
+        return super.getCapability(cap, side);
     }
 
     @Override

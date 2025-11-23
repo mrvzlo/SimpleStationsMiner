@@ -15,8 +15,8 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class MinerMenu extends AbstractContainerMenu {
     public final Level level;
@@ -100,11 +100,25 @@ public class MinerMenu extends AbstractContainerMenu {
         addDataSlot(new DataSlot() {
             @Override
             public int get() {
-                return miner.fuel.getEnergyStored();
+                return miner.fuelLow;
             }
 
             @Override
             public void set(int value) {
+                // HOW THE FUCK I GET SHORT INSTEAD ON INT
+                value = (miner.fuel.getEnergyStored() & 0xFFFF0000) | ((short) value & 0xFFFF);
+                miner.fuel = new EnergyStorage(Config.FUEL_CAPACITY.get(), 0, 0, value);
+            }
+        });
+        addDataSlot(new DataSlot() {
+            @Override
+            public int get() {
+                return miner.fuelHigh;
+            }
+
+            @Override
+            public void set(int value) {
+                value = (miner.fuel.getEnergyStored() & 0xFFFF) | (value << 16);
                 miner.fuel = new EnergyStorage(Config.FUEL_CAPACITY.get(), 0, 0, value);
             }
         });

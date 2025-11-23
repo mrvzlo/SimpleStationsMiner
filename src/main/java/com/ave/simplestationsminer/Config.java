@@ -1,66 +1,50 @@
 package com.ave.simplestationsminer;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-// An example config class. This is not required, but it's a good idea to have one to keep your config organized.
-// Demonstrates how to use Neo's config APIs
-@EventBusSubscriber(modid = SimpleStationsMiner.MODID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = SimpleStationsMiner.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
-        private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-        static ModConfigSpec SPEC;
+        private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+        static ForgeConfigSpec SPEC;
 
-        public static ModConfigSpec.IntValue ENERGY_PER_TICK;
-        public static ModConfigSpec.IntValue MAX_PROGRESS;
-        public static ModConfigSpec.IntValue MAX_COOLANT;
-        public static ModConfigSpec.IntValue MAX_CATALYST;
+        public static ForgeConfigSpec.IntValue ENERGY_PER_TICK = BUILDER
+                        .comment("How much RF to consume per tick\n Default: 16")
+                        .defineInRange("consume", 16, 1, 1000);
+        public static ForgeConfigSpec.IntValue MAX_PROGRESS = BUILDER
+                        .comment("Default working time in ticks\n Default: 1000")
+                        .defineInRange("work_time", 1000, 1, 100000);
+        public static ForgeConfigSpec.IntValue MAX_COOLANT = BUILDER
+                        .comment("Max coolant to store\n Default: 20")
+                        .defineInRange("max_coolant", 20, 1, 10000);
+        public static ForgeConfigSpec.IntValue MAX_CATALYST = BUILDER
+                        .comment("Max catalyst to store\n Default: 20")
+                        .defineInRange("max_catalyst", 20, 1, 10000);
 
-        public static ModConfigSpec.IntValue FUEL_PER_COAL;
-        public static ModConfigSpec.IntValue FUEL_CAPACITY;
-        public static ModConfigSpec.IntValue MAX_Y;
-        public static ModConfigSpec.EnumValue<WorkMode> WORK_MODE;
+        public static ForgeConfigSpec.IntValue FUEL_PER_COAL = BUILDER
+                        .comment("Base RF amount received from 1 coal\n Default: 48000")
+                        .defineInRange("fuel_rf", 48000, 1, 1000000);
+        public static ForgeConfigSpec.IntValue FUEL_CAPACITY = BUILDER
+                        .comment("How much RF can be stored\n Default: 480000")
+                        .defineInRange("fuel_max", 480000, 1, 2_000_000_000);
+        public static ForgeConfigSpec.IntValue MAX_Y = BUILDER
+                        .comment("Highest Y for miner\n Default: 20")
+                        .defineInRange("max_y", 20, -1000, 1000);
+        public static ForgeConfigSpec.EnumValue<WorkMode> WORK_MODE = BUILDER
+                        .comment("Extended work mode forces catalyst and coolant usage\n Default: Basic")
+                        .defineEnum("work_mode", WorkMode.Extended, WorkMode.Basic, WorkMode.Extended);
 
         public static boolean isExtendedMod() {
                 return WORK_MODE.get() == WorkMode.Extended;
         }
 
         static {
-                setupGenerationConfig();
                 SPEC = BUILDER.build();
         }
 
-        private static void setupGenerationConfig() {
-                ENERGY_PER_TICK = BUILDER
-                                .comment("How much RF to consume per tick\n Default: 16")
-                                .defineInRange("consume", 16, 1, 1000);
-                MAX_PROGRESS = BUILDER
-                                .comment("Default working time in ticks\n Default: 1000")
-                                .defineInRange("work_time", 1000, 1, 100000);
-                MAX_COOLANT = BUILDER
-                                .comment("Max coolant to store\n Default: 20")
-                                .defineInRange("max_coolant", 20, 1, 10000);
-                MAX_CATALYST = BUILDER
-                                .comment("Max catalyst to store\n Default: 20")
-                                .defineInRange("max_catalyst", 20, 1, 10000);
-                FUEL_PER_COAL = BUILDER
-                                .comment("Base RF amount received from 1 coal\n Default: 48000")
-                                .defineInRange("fuel_rf", 48000, 1, 1000000);
-                FUEL_CAPACITY = BUILDER
-                                .comment("How much RF can be stored\n Default: 480000")
-                                .defineInRange("fuel_max", 480000, 1, 2_000_000_000);
-                MAX_Y = BUILDER
-                                .comment("Highest Y for miner\n Default: 20")
-                                .defineInRange("max_y", 20, -1000, 1000);
-                WORK_MODE = BUILDER
-                                .comment("Extended work mode forces catalyst and coolant usage\n Default: Basic")
-                                .defineEnum("work_mode", WorkMode.Extended, WorkMode.Basic, WorkMode.Extended);
-        }
-
         @SubscribeEvent
-        static void onLoad(final ModConfigEvent event) {
-
+        public static void onLoad(final ModConfigEvent event) {
         }
-
 }

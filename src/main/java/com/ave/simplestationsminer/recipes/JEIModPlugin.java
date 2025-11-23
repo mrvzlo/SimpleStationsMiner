@@ -26,7 +26,8 @@ import net.minecraft.world.item.ItemStack;
 public class JEIModPlugin implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(SimpleStationsMiner.MODID, "jei_plugin");
+        return ResourceLocation.fromNamespaceAndPath(SimpleStationsMiner.MODID,
+                "jei_plugin");
     }
 
     @Override
@@ -49,12 +50,13 @@ public class JEIModPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(new ItemStack(SimpleStationsMiner.MINER_BLOCK.get()), MinerRecipeCategory.REGULAR);
+        registry.addRecipeCatalyst(new ItemStack(SimpleStationsMiner.MINER_BLOCK.get()),
+                MinerRecipeCategory.REGULAR);
     }
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addRecipeClickArea(MinerScreen.class, UIBlocks.OUT_SLOT.left, UIBlocks.OUT_SLOT.top,
-                UIBlocks.OUT_SLOT.width, UIBlocks.OUT_SLOT.height, MinerRecipeCategory.REGULAR);
+        registration.addRecipeClickArea(MinerScreen.class, UIBlocks.OUT_SLOT.left - 16, 6, UIBlocks.OUT_SLOT.width + 32,
+                UIBlocks.OUT_SLOT.height, MinerRecipeCategory.REGULAR);
     }
 }

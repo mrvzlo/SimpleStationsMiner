@@ -15,12 +15,18 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandler;
 
 public class PartBlockEntity extends BlockEntity {
+    private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> getEnergyStorage(this));
+    private final LazyOptional<IItemHandler> outputHandler = LazyOptional
+            .of(() -> getItemHandler(Direction.DOWN, this));
+    private final LazyOptional<IItemHandler> inputHandler = LazyOptional.of(() -> getItemHandler(Direction.UP, this));
 
     private BlockPos controllerPos;
 
@@ -40,24 +46,25 @@ public class PartBlockEntity extends BlockEntity {
         return controllerPos;
     }
 
-    public static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(
-                Capabilities.ItemHandler.BLOCK,
-                ModBlockEntities.PART_BLOCK_ENTITY.get(),
-                (be, direction) -> be.getItemHandler(direction, be));
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (cap == ForgeCapabilities.ENERGY)
+            return energy.cast();
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return side.equals(Direction.DOWN) ? outputHandler.cast() : inputHandler.cast();
+
+        return super.getCapability(cap, side);
     }
 
     public IItemHandler getItemHandler(Direction side, PartBlockEntity be) {
-        SidedItemHandler inventory = ((MinerBlockEntity) be.getLevel()
-                .getBlockEntity(be.controllerPos)).inventory;
+        SidedItemHandler inventory = ((MinerBlockEntity) be.getLevel().getBlockEntity(be.controllerPos)).inventory;
         if (side == Direction.DOWN)
             return new OutputItemHandler(inventory);
         return new InputItemHandler(inventory);
     }
 
     public EnergyStorage getEnergyStorage(PartBlockEntity be) {
-        return ((MinerBlockEntity) be.getLevel()
-                .getBlockEntity(be.controllerPos)).fuel;
+        return ((MinerBlockEntity) be.getLevel().getBlockEntity(be.controllerPos)).fuel;
     }
 
     @Override

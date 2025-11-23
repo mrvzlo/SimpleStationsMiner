@@ -3,6 +3,7 @@ package com.ave.simplestationsminer.blockentity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -72,9 +73,10 @@ public class MinerBlock extends Block implements EntityBlock {
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!(player instanceof ServerPlayer sp))
+            return ItemInteractionResult.SUCCESS;
         MinerBlockEntity blockEntity = (MinerBlockEntity) level.getBlockEntity(pos);
-        player.openMenu(new SimpleMenuProvider(blockEntity, Component.translatable("screen.simplestationsminer.miner")),
-                pos);
+        sp.openMenu(new SimpleMenuProvider(blockEntity, Component.literal("")), pos);
         return ItemInteractionResult.SUCCESS;
     }
 
@@ -124,7 +126,7 @@ public class MinerBlock extends Block implements EntityBlock {
         BlockEntity controller = level.getBlockEntity(pos);
         if (controller instanceof MinerBlockEntity miner) {
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(),
-                    new ItemStack(SimpleStationsMiner.MINER_BLOCK, 1));
+                    new ItemStack(SimpleStationsMiner.MINER_BLOCK_ITEM.get(), 1));
             Containers.dropContents(level, pos, miner.inventory.getAsList());
         }
         super.onRemove(state, level, pos, newState, moving);
