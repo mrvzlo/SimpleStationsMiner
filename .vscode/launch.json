@@ -6,17 +6,17 @@
       "request": "launch",
       "name": "Client",
       "presentation": {
-        "group": "Mod Development - minecraft",
+        "group": "Mod Development - miner",
         "order": 0
       },
-      "projectName": "minecraft",
+      "projectName": "miner",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\clientRunProgramArgs.txt"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\clientRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\bin\\main"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\miner\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -28,17 +28,17 @@
       "request": "launch",
       "name": "Data",
       "presentation": {
-        "group": "Mod Development - minecraft",
+        "group": "Mod Development - miner",
         "order": 1
       },
-      "projectName": "minecraft",
+      "projectName": "miner",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\dataRunProgramArgs.txt"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\dataRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\dataRunVmArgs.txt",
-        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\bin\\main"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\miner\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -50,17 +50,17 @@
       "request": "launch",
       "name": "GameTestServer",
       "presentation": {
-        "group": "Mod Development - minecraft",
+        "group": "Mod Development - miner",
         "order": 2
       },
-      "projectName": "minecraft",
+      "projectName": "miner",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\gameTestServerRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\gameTestServerRunVmArgs.txt",
-        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\bin\\main"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\miner\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -72,17 +72,17 @@
       "request": "launch",
       "name": "Server",
       "presentation": {
-        "group": "Mod Development - minecraft",
+        "group": "Mod Development - miner",
         "order": 3
       },
-      "projectName": "minecraft",
+      "projectName": "miner",
       "mainClass": "net.neoforged.devlaunch.Main",
       "args": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\serverRunProgramArgs.txt"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\serverRunProgramArgs.txt"
       ],
       "vmArgs": [
-        "@D:\\Sharp\\minecraft\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\bin\\main"
+        "@D:\\Sharp\\minecraft\\miner\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dsimplestationsminer%%D:\\Sharp\\minecraft\\miner\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
