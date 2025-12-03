@@ -3,6 +3,7 @@ package com.ave.simplestationsminer.renderer;
 import com.ave.simplestationsminer.blockentity.MinerBlock;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -35,10 +36,19 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
         Direction direction = be.getBlockState().getValue(MinerBlock.FACING);
         long gameTime = be.getLevel().getGameTime();
 
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 0), 0.5f, direction);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 250), 0.4f, direction);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 500), 0.5f, direction);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 750), 0.6f, direction);
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 0), 0.5f, direction, 0.7f, 0);
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 250), 0.4f, direction, 0.7f, 0);
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 500), 0.5f, direction, 0.7f, 0);
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 750), 0.6f, direction, 0.7f, 0);
+
+        float rotation = ((gameTime * 4) % 360);
+        if (be.drill != null) {
+            var drill = new ItemStack(be.drill);
+            if (be.drillCount > 0)
+                drawBlock(pose, itemRenderer, drill, be, buf, -0.5f, -0.5f, direction, 1, rotation);
+            if (be.drillCount > 1)
+                drawBlock(pose, itemRenderer, drill, be, buf, -0.5f, 1.5f, direction, 1, rotation);
+        }
     }
 
     private float getZShift(long gameTime, int delay) {
@@ -47,8 +57,9 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
     }
 
     private void drawBlock(PoseStack pose, ItemRenderer itemRenderer, ItemStack stack,
-            MinerBlockEntity be, MultiBufferSource buf, float sx, float sz, Direction direction) {
-        if (sx >= 1.5f || sx <= -0.5f)
+            MinerBlockEntity be, MultiBufferSource buf, float sx, float sz, Direction direction, float size,
+            float rotate) {
+        if (sx >= 1.5f || sx < -0.5f)
             return;
         if (direction == Direction.WEST || direction == Direction.SOUTH)
             sx = 1 - sx;
@@ -60,7 +71,9 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
 
         pose.pushPose();
         pose.translate(sx, 0.5f, sz);
-        pose.scale(0.7f, 0.7f, 0.7f);
+        pose.scale(0.7f, size, 0.7f);
+        if (rotate > 0)
+            pose.mulPose(Axis.YP.rotationDegrees(rotate));
 
         int light = getLightLevel(be.getLevel(), be.getBlockPos());
         itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, light, OverlayTexture.NO_OVERLAY, pose, buf,

@@ -24,8 +24,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(ModTags.Items.MINEABLE_TAG)
                 .add(Items.STONE)
-                .add(Items.GRAVEL)
-                .add(Items.SAND)
+                .add(Items.GRANITE)
+                .add(Items.ANDESITE)
+                .add(Items.DIORITE)
+                .add(Items.OBSIDIAN)
                 .addTag(ItemTags.COAL_ORES)
                 .addTag(ItemTags.IRON_ORES)
                 .addTag(ItemTags.GOLD_ORES)

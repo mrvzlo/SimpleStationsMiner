@@ -1,7 +1,10 @@
 {
   "itemGroup.simplestationsminer": "Простые Шахтёрские Станции",
   "item.simplestationsminer.miner": "Шахтёрская станция",
-  "item.simplestationsminer.miner_drill": "Бур",
+  "item.simplestationsminer.portal": "Карманный портал",
+  "item.simplestationsminer.drill": "Железный бур",
+  "item.simplestationsminer.drill_2": "Алмазный бур",
+  "item.simplestationsminer.drill_3": "Незеритовый бур",
 
   "simplestationsminer.configuration.title": "Настройки",
   "simplestationsminer.configuration.consume": "Потребление RF в тик",
@@ -15,9 +18,11 @@
 
   "screen.simplestationsminer.miner": "Шахтёрская станция",
   "screen.simplestationsminer.recipes": "Рецепты шахты",
-  "screen.simplestationsminer.fuel": "Энергия",
-  "screen.simplestationsminer.coolant": "Охлаждение",
-  "screen.simplestationsminer.catalysis": "Катализатор",
+  "screen.simplestationsminer.need_drill": "Отсутствует бур",
+  "screen.simplestationsminer.need_portal": "Слот для портала",
+  "screen.simplestationsminer.fuel": "Слот для топлива",
+  "screen.simplestationsminer.coolant": "Слот для охлаждения",
+  "screen.simplestationsminer.catalysis": "Слот для катализатора",
   "screen.simplestationsminer.filter": "Руда для выкапывания",
   "screen.simplestationsminer.depthError": "Станция слишком высоко"
 }

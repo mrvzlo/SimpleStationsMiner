@@ -41,6 +41,11 @@ public class MinerMenu extends AbstractContainerMenu {
         addSlot(new SlotItemHandler(blockEntity.inventory, ModContainer.TYPE_SLOT, UIBlocks.FILTER_SLOT.left,
                 UIBlocks.FILTER_SLOT.top));
 
+        addSlot(new SlotItemHandler(blockEntity.inventory, ModContainer.PORTAL_SLOT, UIBlocks.PORTAL_SLOT.left,
+                UIBlocks.PORTAL_SLOT.top));
+        addSlot(new SlotItemHandler(blockEntity.inventory, ModContainer.DRILL_SLOT, UIBlocks.DRILL_SLOT.left,
+                UIBlocks.DRILL_SLOT.top));
+
         if (Config.isExtendedMod()) {
             addSlot(new SlotItemHandler(blockEntity.inventory, ModContainer.COOLANT_SLOT, UIBlocks.COOL_SLOT.left,
                     UIBlocks.COOL_SLOT.top));
@@ -133,7 +138,7 @@ public class MinerMenu extends AbstractContainerMenu {
         int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
         int VANILLA_FIRST_SLOT_INDEX = 0;
         int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-        int TE_INVENTORY_SLOT_COUNT = Config.isExtendedMod() ? 5 : 3;
+        int TE_INVENTORY_SLOT_COUNT = Config.isExtendedMod() ? 7 : 5;
 
         Slot sourceSlot = slots.get(pIndex);
         if (sourceSlot == null || !sourceSlot.hasItem())

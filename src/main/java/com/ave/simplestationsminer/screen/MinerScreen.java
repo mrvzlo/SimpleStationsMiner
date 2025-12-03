@@ -65,8 +65,17 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
             gfx.renderTooltip(font, Component.literal(progressPart + "%"), mouseX, mouseY);
         }
 
-        if (miner.type == null && UIBlocks.FILTER_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
+        if (miner.type == null && !miner.invalidDepth
+                && UIBlocks.FILTER_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
             gfx.renderTooltip(font, Component.translatable("screen.simplestationsminer.filter"), mouseX, mouseY);
+        }
+
+        if (!miner.hasNetherUpdate && UIBlocks.PORTAL_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
+            gfx.renderTooltip(font, Component.translatable("screen.simplestationsminer.need_portal"), mouseX, mouseY);
+        }
+
+        if (miner.drillCount == 0 && UIBlocks.DRILL_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
+            gfx.renderTooltip(font, Component.translatable("screen.simplestationsminer.need_drill"), mouseX, mouseY);
         }
 
         if (miner.invalidDepth && UIBlocks.ERROR.isHovered(mouseX - startX, mouseY - startY)) {
@@ -98,7 +107,8 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
         UIBlocks.PROGRESS_BAR.drawProgressToRight(graphics, x, y, progressPart, 0xFFCCFEDD);
 
         if (miner.invalidDepth) {
-            UIBlocks.ERROR.drawText(graphics, x, y, font, borderColor, "Y > " + Config.MAX_Y);
+            Component error = Component.literal("Y > " + Config.MAX_Y.get());
+            UIBlocks.ERROR.drawTextRight(graphics, x, y, font, borderColor, error);
             return;
         }
 
@@ -106,6 +116,10 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
         UIBlocks.FUEL_BAR.drawProgressToTop(graphics, x, y, fuelPart, 0xAA225522);
         if (fuelPart == 0)
             UIBlocks.FUEL_SLOT.drawBorder(graphics, x, y, borderColor);
+        if (miner.drillCount == 0)
+            UIBlocks.DRILL_SLOT.drawBorder(graphics, x, y, borderColor);
+        if (!miner.isValidWorld())
+            UIBlocks.PORTAL_SLOT.drawBorder(graphics, x, y, borderColor);
 
         if (!Config.isExtendedMod())
             return;

@@ -14,10 +14,7 @@ public class ModSounds {
                         .create(ForgeRegistries.SOUND_EVENTS, SimpleStationsMiner.MODID);
 
         public static final Supplier<SoundEvent> WORK_SOUND = SOUND_EVENTS.register(
-                        "work_sound",
-                        () -> SoundEvent
-                                        .createVariableRangeEvent(ResourceLocation
-                                                        .fromNamespaceAndPath(SimpleStationsMiner.MODID,
-                                                                        "work_sound")));
+                        "work_sound", () -> SoundEvent.createVariableRangeEvent(ResourceLocation
+                                        .fromNamespaceAndPath(SimpleStationsMiner.MODID, "work_sound")));
 
 }

@@ -54,8 +54,14 @@ public class SimpleStationsMiner {
         public static final RegistryObject<BlockItem> MINER_BLOCK_ITEM = ITEMS.register(
                         "miner", () -> new ItemNameBlockItem(MINER_BLOCK.get(), new Item.Properties()));
 
-        public static final RegistryObject<Item> MINER_DRILL = ITEMS.register(
-                        "miner_drill", () -> new Item(new Item.Properties()));
+        public static final RegistryObject<Item> PORTAL = ITEMS.register("portal",
+                        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<Item> DRILL_ITEM = ITEMS.register("drill",
+                        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<Item> DRILL_ITEM_2 = ITEMS.register("drill_2",
+                        () -> new Item(new Item.Properties()));
+        public static final RegistryObject<Item> DRILL_ITEM_3 = ITEMS.register("drill_3",
+                        () -> new Item(new Item.Properties()));
 
         public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
                         .register("example_tab", () -> CreativeModeTab.builder()
@@ -67,7 +73,10 @@ public class SimpleStationsMiner {
                                         .icon(() -> MINER_BLOCK_ITEM.get().getDefaultInstance())
                                         .displayItems((parameters, output) -> {
                                                 output.accept(MINER_BLOCK_ITEM.get());
-                                                output.accept(MINER_DRILL.get());
+                                                output.accept(DRILL_ITEM.get());
+                                                output.accept(DRILL_ITEM_2.get());
+                                                output.accept(DRILL_ITEM_3.get());
+                                                output.accept(PORTAL.get());
                                         }).build());
 
         public static final Capability<IItemHandler> ITEM = CapabilityManager.get(new CapabilityToken<>() {
