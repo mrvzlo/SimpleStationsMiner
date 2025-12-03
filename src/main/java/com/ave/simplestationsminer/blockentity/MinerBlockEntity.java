@@ -3,6 +3,7 @@ package com.ave.simplestationsminer.blockentity;
 import java.util.ArrayList;
 import java.util.List;
 import com.ave.simplestationsminer.Config;
+import com.ave.simplestationsminer.blockentity.managers.ExportManager;
 import com.ave.simplestationsminer.blockentity.managers.ResourceManager;
 import com.ave.simplestationsminer.blockentity.managers.UpgradeManager;
 import com.ave.simplestationsminer.blockentity.managers.WorkManager;
@@ -56,6 +57,7 @@ public class MinerBlockEntity extends ModContainer {
         if (shouldUpdate)
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
 
+        ExportManager.pushOutput(this);
         if (type == null || !working)
             return;
 
