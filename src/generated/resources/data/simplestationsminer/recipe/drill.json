@@ -15,9 +15,13 @@
       "item": "minecraft:redstone"
     }
   },
-  "pattern": ["LIL", "RIR", "IBI"],
+  "pattern": [
+    "LIL",
+    "RIR",
+    "IBI"
+  ],
   "result": {
     "count": 1,
-    "id": "simplestationsminer:miner_drill"
+    "id": "simplestationsminer:drill"
   }
 }

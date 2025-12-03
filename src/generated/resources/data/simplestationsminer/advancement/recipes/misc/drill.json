@@ -13,13 +13,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "simplestationsminer:miner"
+        "recipe": "simplestationsminer:drill"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
-  "requirements": [["has_the_recipe", "has_iron"]],
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_iron"
+    ]
+  ],
   "rewards": {
-    "recipes": ["simplestationsminer:miner"]
+    "recipes": [
+      "simplestationsminer:drill"
+    ]
   }
 }

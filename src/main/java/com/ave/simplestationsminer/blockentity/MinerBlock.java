@@ -34,9 +34,7 @@ public class MinerBlock extends Block implements EntityBlock {
 
     public MinerBlock(Properties props) {
         super(props);
-        this.registerDefaultState(
-                this.stateDefinition.any()
-                        .setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
     @Nullable
@@ -73,13 +71,14 @@ public class MinerBlock extends Block implements EntityBlock {
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hit) {
         MinerBlockEntity blockEntity = (MinerBlockEntity) level.getBlockEntity(pos);
-        player.openMenu(new SimpleMenuProvider(blockEntity, Component.literal("")),
-                pos);
+        player.openMenu(new SimpleMenuProvider(blockEntity, Component.literal("")), pos);
         return ItemInteractionResult.SUCCESS;
     }
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        if (level instanceof Level lvl && lvl.dimension().equals(Level.NETHER))
+            return false;
         for (int dx = -1; dx <= 1; dx++)
             for (int dz = -1; dz <= 1; dz++) {
                 BlockPos p = pos.offset(dx, 0, dz);
@@ -109,11 +108,6 @@ public class MinerBlock extends Block implements EntityBlock {
                 PartBlockEntity be = (PartBlockEntity) level.getBlockEntity(p);
                 be.setControllerPos(pos);
             }
-    }
-
-    @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override

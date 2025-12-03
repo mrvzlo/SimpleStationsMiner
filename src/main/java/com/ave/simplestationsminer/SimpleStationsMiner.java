@@ -51,10 +51,15 @@ public class SimpleStationsMiner {
                                         .strength(0.1F).noOcclusion()));
 
         public static final DeferredItem<BlockItem> MINER_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
-                        "miner",
-                        MINER_BLOCK);
+                        "miner", MINER_BLOCK);
 
-        public static final DeferredItem<Item> MINER_DRILL = ITEMS.registerItem("miner_drill", Item::new,
+        public static final DeferredItem<Item> PORTAL = ITEMS.registerItem("portal", Item::new,
+                        new Item.Properties());
+        public static final DeferredItem<Item> DRILL_ITEM = ITEMS.registerItem("drill", Item::new,
+                        new Item.Properties());
+        public static final DeferredItem<Item> DRILL_ITEM_2 = ITEMS.registerItem("drill_2", Item::new,
+                        new Item.Properties());
+        public static final DeferredItem<Item> DRILL_ITEM_3 = ITEMS.registerItem("drill_3", Item::new,
                         new Item.Properties());
 
         public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
@@ -67,7 +72,10 @@ public class SimpleStationsMiner {
                                         .icon(() -> MINER_BLOCK_ITEM.get().getDefaultInstance())
                                         .displayItems((parameters, output) -> {
                                                 output.accept(MINER_BLOCK_ITEM.get());
-                                                output.accept(MINER_DRILL.get());
+                                                output.accept(DRILL_ITEM.get());
+                                                output.accept(DRILL_ITEM_2.get());
+                                                output.accept(DRILL_ITEM_3.get());
+                                                output.accept(PORTAL.get());
                                         }).build());
 
         public SimpleStationsMiner(IEventBus modEventBus, ModContainer modContainer) {

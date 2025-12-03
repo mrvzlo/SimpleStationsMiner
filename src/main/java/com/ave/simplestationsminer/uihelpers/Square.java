@@ -2,6 +2,7 @@ package com.ave.simplestationsminer.uihelpers;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 
 public class Square {
     public final int left;
@@ -47,7 +48,7 @@ public class Square {
         g.fill(x + left, y + start, x + right, y + bottom, color);
     }
 
-    public void drawText(GuiGraphics g, int x, int y, Font font, int color, String text) {
-        g.drawString(font, text, x + left, y + top, color, false);
+    public void drawTextRight(GuiGraphics g, int x, int y, Font font, int color, Component text) {
+        g.drawString(font, text, x + right - font.width(text), y + top, color, false);
     }
 }

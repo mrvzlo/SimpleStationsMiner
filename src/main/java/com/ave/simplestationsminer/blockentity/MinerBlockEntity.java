@@ -1,16 +1,16 @@
 package com.ave.simplestationsminer.blockentity;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.ave.simplestationsminer.Config;
-import com.ave.simplestationsminer.sound.ModSounds;
-
+import com.ave.simplestationsminer.blockentity.managers.ResourceManager;
+import com.ave.simplestationsminer.blockentity.managers.UpgradeManager;
+import com.ave.simplestationsminer.blockentity.managers.WorkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.EnergyStorage;
 
@@ -23,11 +23,20 @@ public class MinerBlockEntity extends ModContainer {
     public boolean working = false;
     public boolean invalidDepth = false;
 
-    private float speed = 1;
-    private int outputSize = 1;
+    public List<UpgradeType> upgrades = new ArrayList<UpgradeType>();
+    public boolean hasNetherUpdate = false;
+    public Item drill = null;
+    public int drillCount = 0;
+
+    public float speed = 1;
+    public int outputSize = 1;
+    public int powerConsuption = 0;
+
+    public int upgradesHash = 0;
+    public int soundCooldown = 0;
 
     public MinerBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MINER_BLOCK_ENTITY.get(), pos, state, 5);
+        super(ModBlockEntities.MINER_BLOCK_ENTITY.get(), pos, state, 7);
         if (pos != null)
             invalidDepth = pos.getY() > Config.MAX_Y.get();
         fuel = new EnergyStorage(Config.FUEL_CAPACITY.get());
@@ -40,138 +49,41 @@ public class MinerBlockEntity extends ModContainer {
         if (progress >= Config.MAX_PROGRESS.get())
             progress -= Config.MAX_PROGRESS.get();
 
-        checkNewType();
-        checkResource(FUEL_SLOT, Items.COAL_BLOCK, Config.FUEL_PER_COAL.get(), Config.FUEL_CAPACITY.get(),
-                ResourceType.FUEL);
+        var shouldUpdate = checkNewType() || UpgradeManager.checkUpgradeSlots(this);
+        ResourceManager.checkAllResources(this);
+        working = WorkManager.getWorking(this);
 
-        if (Config.isExtendedMod()) {
-            checkResource(REDSTONE_SLOT, Items.REDSTONE_BLOCK, 1, Config.MAX_CATALYST.get(), ResourceType.REDSTONE);
-            checkResource(COOLANT_SLOT, Items.LAPIS_BLOCK, 1, Config.MAX_COOLANT.get(), ResourceType.COOLANT);
-        }
-        ItemStack slot = inventory.getStackInSlot(OUTPUT_SLOT);
-        working = getWorking(slot);
+        if (shouldUpdate)
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
 
         if (type == null || !working)
             return;
 
-        progress += speed;
-        fuel.extractEnergy(Config.ENERGY_PER_TICK.get(), false);
-        playSound();
+        WorkManager.performWorkTick(this);
 
         if (progress < Config.MAX_PROGRESS.get())
             return;
 
-        if (Config.isExtendedMod()) {
-            coolant--;
-            redstone--;
-        }
-        ItemStack toAdd = new ItemStack(type);
-        toAdd.setCount(slot.getCount() + outputSize);
-        inventory.setStackInSlot(OUTPUT_SLOT, toAdd);
+        WorkManager.performWorkEnd(this);
         setChanged();
     }
 
-    private boolean getWorking(ItemStack slot) {
-        if (type == null)
-            return false;
-        if (Config.isExtendedMod() && (coolant < 1 || redstone < 1))
-            return false;
-        if (fuel.getEnergyStored() < Config.ENERGY_PER_TICK.get())
-            return false;
-        if (slot.getCount() == 0)
-            return true;
-        if (slot.getCount() + outputSize > slot.getMaxStackSize())
-            return false;
-        return slot.getItem().equals(type);
-    }
-
-    private boolean checkResource(int slot, Item blockItem, int singleValue, int maxCapacity, ResourceType type) {
-        ItemStack stack = inventory.getStackInSlot(slot);
-        int increment = stack.getItem().equals(blockItem) ? singleValue * 9 : singleValue;
-
-        if (stack.isEmpty() || getResourceValue(type) + increment > maxCapacity)
-            return false;
-
-        stack.shrink(1);
-        inventory.setStackInSlot(slot, stack);
-        addResource(type, increment);
-        return true;
-    }
-
-    private void addResource(ResourceType type, int amount) {
-        switch (type) {
-            case FUEL -> fuel.receiveEnergy(amount, false);
-            case COOLANT -> coolant += amount;
-            case REDSTONE -> redstone += amount;
-        }
-    }
-
-    public int soundCooldown = 0;
-
-    private void playSound() {
-        if (soundCooldown > 0) {
-            soundCooldown--;
-            return;
-        }
-        soundCooldown += 25;
-        level.playSound(null, getBlockPos(), ModSounds.WORK_SOUND.get(), SoundSource.BLOCKS);
-    }
-
-    private int getResourceValue(ResourceType type) {
-        return switch (type) {
-            case FUEL -> fuel.getEnergyStored();
-            case COOLANT -> coolant;
-            case REDSTONE -> redstone;
-        };
-    }
-
-    private int getOutputSize() {
-        return getOutputSize(type);
-    }
-
-    public static int getOutputSize(Item item) {
-        if (item == null)
-            return 1;
-
-        if (item.equals(Items.SAND) || item.equals(Items.STONE) || item.equals(Items.GRAVEL))
-            return 8;
-
-        if (item.equals(Items.COAL_ORE) || item.equals(Items.DEEPSLATE_COAL_ORE)
-                || item.equals(Items.COPPER_ORE) || item.equals(Items.DEEPSLATE_COPPER_ORE)
-                || item.equals(Items.NETHER_QUARTZ_ORE))
-            return 2;
-
-        return 1;
-    }
-
-    private int getSpeedMod() {
-        return getSpeedMod(type);
-    }
-
-    public static int getSpeedMod(Item item) {
-        if (item == null)
-            return 1;
-        ItemStack stack = new ItemStack(item);
-        if (stack.is(ItemTags.DIAMOND_ORES))
-            return 5;
-        if (stack.is(ItemTags.EMERALD_ORES))
-            return 6;
-        if (item.equals(Items.ANCIENT_DEBRIS))
-            return 20;
-
-        return 1;
-    }
-
-    private void checkNewType() {
+    private boolean checkNewType() {
         Item newType = getCurrentFilter();
         if (type == null && newType == null || type != null && type.equals(newType))
-            return;
+            return false;
 
         type = newType;
         progress = 0;
-        speed = 1f / getSpeedMod();
-        outputSize = getOutputSize();
-        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        speed = WorkManager.getSpeedValue(this);
+        outputSize = WorkManager.getOutputSize(type);
+        return true;
+    }
+
+    public boolean isValidWorld() {
+        if (this.type == null || hasNetherUpdate)
+            return true;
+        return !this.type.toString().contains("nether");
     }
 
     @Override
@@ -195,8 +107,12 @@ public class MinerBlockEntity extends ModContainer {
         progress = tag.getFloat("progress");
         coolant = tag.getInt("coolant");
         redstone = tag.getInt("redstone");
-        speed = 1f / getSpeedMod();
-        outputSize = getOutputSize();
+        upgrades.clear();
+        outputSize = WorkManager.getOutputSize(type);
+        for (byte up : tag.getByteArray("upgrades"))
+            upgrades.add(UpgradeType.values()[up]);
+        UpgradeManager.applyUpgrades(this);
+        speed = WorkManager.getSpeedValue(this);
     }
 
     private void saveAll(CompoundTag tag) {
@@ -204,6 +120,7 @@ public class MinerBlockEntity extends ModContainer {
         tag.putFloat("progress", progress);
         tag.putInt("coolant", coolant);
         tag.putInt("redstone", redstone);
+        tag.putByteArray("upgrades", upgrades.stream().map(x -> (byte) x.ordinal()).toList());
     }
 
     private Item getCurrentFilter() {
@@ -211,7 +128,4 @@ public class MinerBlockEntity extends ModContainer {
         return stack.isEmpty() ? null : stack.getItem();
     }
 
-    private enum ResourceType {
-        FUEL, COOLANT, REDSTONE
-    }
 }

@@ -19,7 +19,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput consumer) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SimpleStationsMiner.MINER_DRILL.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SimpleStationsMiner.DRILL_ITEM.get())
                 .pattern("LIL")
                 .pattern("RIR")
                 .pattern("IBI")
@@ -34,11 +34,38 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("DRD")
                 .pattern("RCR")
                 .pattern("HRH")
-                .define('D', SimpleStationsMiner.MINER_DRILL.get())
+                .define('D', Items.DEEPSLATE_BRICKS)
                 .define('H', Items.HOPPER)
                 .define('C', Items.MINECART)
                 .define('R', Items.POWERED_RAIL)
                 .unlockedBy("has_iron", has(Items.IRON_INGOT))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SimpleStationsMiner.PORTAL.get())
+                .pattern("OOO")
+                .pattern("OFO")
+                .pattern("OOO")
+                .define('O', Items.OBSIDIAN)
+                .define('F', Items.FIRE_CHARGE)
+                .unlockedBy("has_obsidian", has(Items.OBSIDIAN))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SimpleStationsMiner.DRILL_ITEM_2.get())
+                .pattern("OOO")
+                .pattern("OFO")
+                .pattern("OOO")
+                .define('O', Items.DIAMOND)
+                .define('F', SimpleStationsMiner.DRILL_ITEM.get())
+                .unlockedBy("has_diamond", has(Items.DIAMOND))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SimpleStationsMiner.DRILL_ITEM_3.get())
+                .pattern(" O ")
+                .pattern("OFO")
+                .pattern(" O ")
+                .define('O', Items.NETHERITE_INGOT)
+                .define('F', SimpleStationsMiner.DRILL_ITEM_2.get())
+                .unlockedBy("has_diamond", has(Items.DIAMOND))
                 .save(consumer);
     }
 }

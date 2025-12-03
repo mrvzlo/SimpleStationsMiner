@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "simplestationsminer:drill_2"
+    },
+    "O": {
+      "item": "minecraft:netherite_ingot"
+    }
+  },
+  "pattern": [
+    " O ",
+    "OFO",
+    " O "
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplestationsminer:drill_3"
+  }
+}

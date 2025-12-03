@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "simplestationsminer:drill"
+    },
+    "O": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    "OOO",
+    "OFO",
+    "OOO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "simplestationsminer:drill_2"
+  }
+}

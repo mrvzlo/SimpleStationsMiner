@@ -1,7 +1,10 @@
 {
   "itemGroup.simplestationsminer": "Simple Mining Stations",
   "block.simplestationsminer.miner": "Mining station",
-  "item.simplestationsminer.miner_drill": "Drill",
+  "item.simplestationsminer.portal": "Pocket portal",
+  "item.simplestationsminer.drill": "Iron drill",
+  "item.simplestationsminer.drill_2": "Diamond drill",
+  "item.simplestationsminer.drill_3": "Netherite drill",
 
   "simplestationsminer.configuration.title": "Configs",
   "simplestationsminer.configuration.consume": "RF consume per tick",
@@ -15,9 +18,11 @@
 
   "screen.simplestationsminer.miner": "Mining station",
   "screen.simplestationsminer.recipes": "Miner recipes",
-  "screen.simplestationsminer.fuel": "Energy",
-  "screen.simplestationsminer.coolant": "Coolant",
-  "screen.simplestationsminer.catalysis": "Catalyst",
+  "screen.simplestationsminer.need_drill": "No drill",
+  "screen.simplestationsminer.need_portal": "Pocket portal slot",
+  "screen.simplestationsminer.fuel": "Fuel slot",
+  "screen.simplestationsminer.coolant": "Coolant slot",
+  "screen.simplestationsminer.catalysis": "Catalyst slot",
   "screen.simplestationsminer.filter": "Ore block to mine",
   "screen.simplestationsminer.depthError": "Altitude is too high"
 }

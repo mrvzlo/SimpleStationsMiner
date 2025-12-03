@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.ave.simplestationsminer.Config;
 import com.ave.simplestationsminer.SimpleStationsMiner;
-import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
+import com.ave.simplestationsminer.blockentity.managers.WorkManager;
 import com.ave.simplestationsminer.datagen.ModTags;
 import com.ave.simplestationsminer.screen.MinerScreen;
 import com.ave.simplestationsminer.uihelpers.UIBlocks;
@@ -40,9 +40,9 @@ public class JEIModPlugin implements IModPlugin {
         for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.Items.MINEABLE_TAG)) {
             ItemStack stack = new ItemStack(item);
             int consume = Config.ENERGY_PER_TICK.get() * Config.MAX_PROGRESS.get()
-                    * MinerBlockEntity.getSpeedMod(item.value());
+                    * WorkManager.getSpeedMod(item.value());
             recipes.add(new SimpleRecipe(consume, stack,
-                    MinerBlockEntity.getOutputSize(item.value())));
+                    WorkManager.getOutputSize(item.value())));
         }
         registration.addRecipes(MinerRecipeCategory.REGULAR, recipes);
     }

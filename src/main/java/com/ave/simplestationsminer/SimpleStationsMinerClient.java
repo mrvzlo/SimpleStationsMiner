@@ -7,7 +7,6 @@ import com.ave.simplestationsminer.renderer.MinerRenderer;
 import com.ave.simplestationsminer.screen.ModMenuTypes;
 import com.ave.simplestationsminer.screen.MinerScreen;
 
-import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;

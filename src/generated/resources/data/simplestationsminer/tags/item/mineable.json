@@ -1,8 +1,10 @@
 {
   "values": [
     "minecraft:stone",
-    "minecraft:gravel",
-    "minecraft:sand",
+    "minecraft:granite",
+    "minecraft:andesite",
+    "minecraft:diorite",
+    "minecraft:obsidian",
     "#minecraft:coal_ores",
     "#minecraft:iron_ores",
     "#minecraft:gold_ores",

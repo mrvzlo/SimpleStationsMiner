@@ -6,7 +6,7 @@
       "item": "minecraft:minecart"
     },
     "D": {
-      "item": "simplestationsminer:miner_drill"
+      "item": "simplestationsminer:drill"
     },
     "H": {
       "item": "minecraft:hopper"
@@ -15,7 +15,11 @@
       "item": "minecraft:powered_rail"
     }
   },
-  "pattern": ["DRD", "RCR", "HRH"],
+  "pattern": [
+    "DRD",
+    "RCR",
+    "HRH"
+  ],
   "result": {
     "count": 1,
     "id": "simplestationsminer:miner"

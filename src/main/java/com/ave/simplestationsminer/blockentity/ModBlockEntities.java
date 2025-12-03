@@ -13,16 +13,10 @@ public class ModBlockEntities {
                         .create(Registries.BLOCK_ENTITY_TYPE, SimpleStationsMiner.MODID);
 
         public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MinerBlockEntity>> MINER_BLOCK_ENTITY = BLOCK_ENTITIES
-                        .register("miner",
-                                        () -> BlockEntityType.Builder
-                                                        .of(MinerBlockEntity::new,
-                                                                        SimpleStationsMiner.MINER_BLOCK.get())
-                                                        .build(null));
+                        .register("miner", () -> BlockEntityType.Builder
+                                        .of(MinerBlockEntity::new, SimpleStationsMiner.MINER_BLOCK.get()).build(null));
 
         public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PartBlockEntity>> PART_BLOCK_ENTITY = BLOCK_ENTITIES
-                        .register("miner_part",
-                                        () -> BlockEntityType.Builder
-                                                        .of(PartBlockEntity::new,
-                                                                        SimpleStationsMiner.MINER_PART.get())
-                                                        .build(null));
+                        .register("miner_part", () -> BlockEntityType.Builder
+                                        .of(PartBlockEntity::new, SimpleStationsMiner.MINER_PART.get()).build(null));
 }

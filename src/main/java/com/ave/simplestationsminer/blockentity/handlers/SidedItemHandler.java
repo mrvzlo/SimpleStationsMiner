@@ -1,6 +1,7 @@
 package com.ave.simplestationsminer.blockentity.handlers;
 
 import com.ave.simplestationsminer.Config;
+import com.ave.simplestationsminer.SimpleStationsMiner;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
 import com.ave.simplestationsminer.blockentity.ModContainer;
 import com.ave.simplestationsminer.datagen.ModTags;
@@ -33,14 +34,24 @@ public class SidedItemHandler extends ItemStackHandler {
         if (slot == MinerBlockEntity.TYPE_SLOT)
             return stack.is(ModTags.Items.MINEABLE_TAG);
 
+        if (slot == MinerBlockEntity.PORTAL_SLOT)
+            return stack.getItem().equals(SimpleStationsMiner.PORTAL.get());
+
+        if (slot == MinerBlockEntity.DRILL_SLOT)
+            return stack.getItem().equals(SimpleStationsMiner.DRILL_ITEM.get()) ||
+                    stack.getItem().equals(SimpleStationsMiner.DRILL_ITEM_2.get()) ||
+                    stack.getItem().equals(SimpleStationsMiner.DRILL_ITEM_3.get());
+
         return super.isItemValid(slot, stack);
     }
 
     @Override
-    protected int getStackLimit(int slot, ItemStack stack) {
-        if (slot == MinerBlockEntity.TYPE_SLOT)
+    public int getSlotLimit(int slot) {
+        if (slot == MinerBlockEntity.TYPE_SLOT || slot == MinerBlockEntity.PORTAL_SLOT)
             return 1;
-        return super.getStackLimit(slot, stack);
+        if (slot == MinerBlockEntity.DRILL_SLOT)
+            return 2;
+        return super.getSlotLimit(slot);
     }
 
     public NonNullList<ItemStack> getAsList() {
