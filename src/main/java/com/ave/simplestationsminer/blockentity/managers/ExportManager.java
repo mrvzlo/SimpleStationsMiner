@@ -6,9 +6,9 @@ import com.ave.simplestationsminer.blockentity.ModContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ExportManager {
     public static void pushOutput(MinerBlockEntity miner) {
@@ -24,8 +24,12 @@ public class ExportManager {
                 if (handler != null)
                     break;
                 var pos = belowPos.offset(dx, 0, dz);
-                handler = Capabilities.ItemHandler.BLOCK.getCapability(miner.getLevel(), pos, null, null,
-                        Direction.UP);
+                var be = miner.getLevel().getBlockEntity(pos);
+                if (be == null)
+                    continue;
+                var cap = be.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP);
+                if (cap.isPresent())
+                    handler = cap.orElse(null);
             }
 
         if (handler == null)
