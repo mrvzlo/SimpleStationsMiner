@@ -6,6 +6,7 @@ import com.ave.simplestationsminer.Config;
 import com.ave.simplestationsminer.blockentity.handlers.InputItemHandler;
 import com.ave.simplestationsminer.blockentity.handlers.OutputItemHandler;
 
+import com.ave.simplestationsminer.blockentity.managers.ExportManager;
 import com.ave.simplestationsminer.blockentity.managers.ResourceManager;
 import com.ave.simplestationsminer.blockentity.managers.UpgradeManager;
 import com.ave.simplestationsminer.blockentity.managers.WorkManager;
@@ -67,6 +68,7 @@ public class MinerBlockEntity extends ModContainer {
         if (shouldUpdate)
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
 
+        ExportManager.pushOutput(this);
         fuelHigh = fuel.getEnergyStored() >> 16;
         fuelLow = fuel.getEnergyStored() & 0xFFFF;
         if (type == null || !working)
