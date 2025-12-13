@@ -46,17 +46,13 @@ public class PartBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof PartBlockEntity part))
-            return;
-        super.onRemove(state, level, pos, newState, moved);
+            return state;
 
-        if (state.getBlock() == newState.getBlock())
-            return;
         BlockPos controllerPos = part.getControllerPos();
-        BlockState controllerState = level.getBlockState(controllerPos);
-        if (controllerState.getBlock() instanceof MinerBlock)
-            level.destroyBlock(controllerPos, false);
+        level.destroyBlock(controllerPos, !player.isCreative());
+        return state;
     }
 }
