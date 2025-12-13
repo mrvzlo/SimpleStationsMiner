@@ -1,5 +1,5 @@
 {
-  "parent": "simplestationsminer:custom/miner_cran",
+  "parent": "simplestationsminer:custom/miner",
   "textures": {
     "all": "simplestationsminer:block/miner",
     "1": "simplestationsminer:block/miner"
