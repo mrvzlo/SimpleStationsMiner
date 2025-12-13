@@ -18,11 +18,10 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         dropSelf(SimpleStationsMiner.MINER_BLOCK.get());
-        dropOther(SimpleStationsMiner.MINER_PART.get(), SimpleStationsMiner.MINER_BLOCK_ITEM.asItem());
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return List.of(SimpleStationsMiner.MINER_BLOCK.get(), SimpleStationsMiner.MINER_PART.get());
+        return List.of(SimpleStationsMiner.MINER_BLOCK.get());
     }
 }

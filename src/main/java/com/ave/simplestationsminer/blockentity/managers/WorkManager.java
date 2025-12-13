@@ -32,7 +32,7 @@ public class WorkManager {
         miner.progress += miner.speed;
         var fuelUsage = Config.ENERGY_PER_TICK.get() * miner.powerConsuption;
         miner.fuel.extractEnergy(fuelUsage, false);
-        SoundManager.playSound(miner);
+        SoundManager.playSound(miner, miner.speed);
     }
 
     public static void performWorkEnd(MinerBlockEntity miner) {

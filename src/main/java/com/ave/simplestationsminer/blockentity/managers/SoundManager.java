@@ -6,12 +6,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
 public class SoundManager {
-    public static void playSound(MinerBlockEntity miner) {
+    public static void playSound(MinerBlockEntity miner, float speed) {
         if (miner.soundCooldown > 0) {
             miner.soundCooldown--;
             return;
         }
-        miner.soundCooldown += 25;
+        miner.soundCooldown += 25 / speed;
         miner.getLevel().playSound(null, miner.getBlockPos(), SoundEvents.DEEPSLATE_BREAK, SoundSource.BLOCKS);
     }
 }
