@@ -57,14 +57,26 @@ public class PartBlockEntity extends BlockEntity {
     }
 
     public IItemHandler getItemHandler(Direction side, PartBlockEntity be) {
-        SidedItemHandler inventory = ((MinerBlockEntity) be.getLevel().getBlockEntity(be.controllerPos)).inventory;
+        var controller = this.getController(be);
+        if (controller == null)
+            return null;
+        var inventory = controller.inventory;
         if (side == Direction.DOWN)
             return new OutputItemHandler(inventory);
         return new InputItemHandler(inventory);
     }
 
     public EnergyStorage getEnergyStorage(PartBlockEntity be) {
-        return ((MinerBlockEntity) be.getLevel().getBlockEntity(be.controllerPos)).fuel;
+        var controller = this.getController(be);
+        if (controller == null)
+            return null;
+        return controller.fuel;
+    }
+
+    private MinerBlockEntity getController(PartBlockEntity be) {
+        if (be.controllerPos == null)
+            return null;
+        return ((MinerBlockEntity) be.getLevel().getBlockEntity(be.controllerPos));
     }
 
     @Override
