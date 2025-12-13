@@ -8,7 +8,6 @@ import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
 import com.ave.simplestationsminer.blockentity.partblock.PartBlock;
 import com.ave.simplestationsminer.blockentity.partblock.PartBlockEntity;
 import com.ave.simplestationsminer.screen.ModMenuTypes;
-import com.ave.simplestationsminer.sound.ModSounds;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.Registries;
@@ -85,7 +84,6 @@ public class SimpleStationsMiner {
                 CREATIVE_MODE_TABS.register(modEventBus);
                 ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
                 ModMenuTypes.register(modEventBus);
-                ModSounds.SOUND_EVENTS.register(modEventBus);
 
                 modEventBus.addListener(this::addCreative);
                 modEventBus.addListener(this::registerCapabilities);

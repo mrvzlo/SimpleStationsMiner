@@ -29,19 +29,9 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
             int overlay) {
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        if (be.type == null)
-            return;
-
-        ItemStack stack = new ItemStack(be.type);
         Direction direction = be.getBlockState().getValue(MinerBlock.FACING);
         long gameTime = be.getLevel().getGameTime();
-
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 0), 0.5f, direction, 0.7f, 0);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 250), 0.4f, direction, 0.7f, 0);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 500), 0.5f, direction, 0.7f, 0);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 750), 0.6f, direction, 0.7f, 0);
-
-        float rotation = ((gameTime * 4) % 360);
+        float rotation = be.type == null ? 0 : ((gameTime * 4) % 360);
         if (be.drill != null) {
             var drill = new ItemStack(be.drill);
             if (be.drillCount > 0)
@@ -49,6 +39,17 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
             if (be.drillCount > 1)
                 drawBlock(pose, itemRenderer, drill, be, buf, -0.5f, 1.5f, direction, 1, rotation);
         }
+
+        if (be.type == null)
+            return;
+
+        ItemStack stack = new ItemStack(be.type);
+
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 0), 0.5f, direction, 0.7f, 0);
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 250), 0.4f, direction, 0.7f, 0);
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 500), 0.5f, direction, 0.7f, 0);
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 750), 0.6f, direction, 0.7f, 0);
+
     }
 
     private float getZShift(long gameTime, int delay) {

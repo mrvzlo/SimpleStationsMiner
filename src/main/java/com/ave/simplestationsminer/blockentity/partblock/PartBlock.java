@@ -57,7 +57,6 @@ public class PartBlock extends Block implements EntityBlock {
         BlockPos controllerPos = part.getControllerPos();
         BlockState controllerState = level.getBlockState(controllerPos);
         if (controllerState.getBlock() instanceof MinerBlock)
-            level.destroyBlock(controllerPos, true);
-
+            level.destroyBlock(controllerPos, false);
     }
 }

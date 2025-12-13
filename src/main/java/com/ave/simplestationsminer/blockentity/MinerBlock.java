@@ -117,8 +117,6 @@ public class MinerBlock extends Block implements EntityBlock {
 
         BlockEntity controller = level.getBlockEntity(pos);
         if (controller instanceof MinerBlockEntity miner) {
-            Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(),
-                    new ItemStack(SimpleStationsMiner.MINER_BLOCK, 1));
             Containers.dropContents(level, pos, miner.inventory.getAsList());
         }
         super.onRemove(state, level, pos, newState, moving);

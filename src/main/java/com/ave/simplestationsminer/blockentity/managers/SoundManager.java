@@ -1,8 +1,8 @@
 package com.ave.simplestationsminer.blockentity.managers;
 
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
-import com.ave.simplestationsminer.sound.ModSounds;
 
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
 public class SoundManager {
@@ -12,6 +12,6 @@ public class SoundManager {
             return;
         }
         miner.soundCooldown += 25;
-        miner.getLevel().playSound(null, miner.getBlockPos(), ModSounds.WORK_SOUND.get(), SoundSource.BLOCKS);
+        miner.getLevel().playSound(null, miner.getBlockPos(), SoundEvents.DEEPSLATE_BREAK, SoundSource.BLOCKS);
     }
 }
