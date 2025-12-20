@@ -17,13 +17,14 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -69,13 +70,13 @@ public class MinerBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hit) {
         if (!(player instanceof ServerPlayer sp))
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         MinerBlockEntity blockEntity = (MinerBlockEntity) level.getBlockEntity(pos);
-        sp.openMenu(new SimpleMenuProvider(blockEntity, Component.literal("")), pos);
-        return ItemInteractionResult.SUCCESS;
+        NetworkHooks.openScreen(((ServerPlayer) player), blockEntity, pos);
+        return InteractionResult.SUCCESS;
     }
 
     @Override

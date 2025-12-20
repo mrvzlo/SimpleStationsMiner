@@ -16,6 +16,7 @@
   "simplestationsminer.configuration.max_y": "Максимальная высота",
   "simplestationsminer.configuration.work_mode": "Режим работы",
 
+  "container.simplestationsminer.miner": "",
   "screen.simplestationsminer.miner": "Шахтёрская станция",
   "screen.simplestationsminer.recipes": "Рецепты шахты",
   "screen.simplestationsminer.need_drill": "Отсутствует бур",
