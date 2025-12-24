@@ -64,10 +64,7 @@ public class SimpleStationsMiner {
 
         public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS
                         .register("example_tab", () -> CreativeModeTab.builder()
-                                        .title(Component.translatable("itemGroup.simplestationsminer")) // The language
-                                                                                                        // key for
-                                        // the title of your
-                                        // CreativeModeTab
+                                        .title(Component.translatable("itemGroup.simplestationsminer"))
                                         .withTabsBefore(CreativeModeTabs.COMBAT)
                                         .icon(() -> MINER_BLOCK_ITEM.get().getDefaultInstance())
                                         .displayItems((parameters, output) -> {
