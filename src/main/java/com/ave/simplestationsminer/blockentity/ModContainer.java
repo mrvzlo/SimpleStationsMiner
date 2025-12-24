@@ -1,9 +1,9 @@
 package com.ave.simplestationsminer.blockentity;
 
 import com.ave.simplestationsminer.SimpleStationsMiner;
-import com.ave.simplestationsminer.blockentity.handlers.InputItemHandler;
-import com.ave.simplestationsminer.blockentity.handlers.OutputItemHandler;
+import com.ave.simplestationsminer.blockentity.handlers.CommonItemHandler;
 import com.ave.simplestationsminer.blockentity.handlers.SidedItemHandler;
+import com.ave.simplestationsminer.blockentity.handlers.CommonItemHandler;
 import com.ave.simplestationsminer.screen.MinerMenu;
 
 import net.minecraft.core.BlockPos;
@@ -27,7 +27,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
 public class ModContainer extends BlockEntity implements MenuProvider {
-    public final SidedItemHandler inventory;
+    public final CommonItemHandler inventory;
     public static final int OUTPUT_SLOT = 0;
     public static final int FUEL_SLOT = 1;
     public static final int TYPE_SLOT = 2;
@@ -39,7 +39,7 @@ public class ModContainer extends BlockEntity implements MenuProvider {
 
     public ModContainer(BlockEntityType<MinerBlockEntity> entity, BlockPos pos, BlockState state, int size) {
         super(entity, pos, state);
-        inventory = new SidedItemHandler(size) {
+        inventory = new CommonItemHandler(size) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
@@ -53,9 +53,9 @@ public class ModContainer extends BlockEntity implements MenuProvider {
     }
 
     public IItemHandler getItemHandler(Direction side) {
-        if (side == Direction.DOWN)
-            return new OutputItemHandler(inventory);
-        return new InputItemHandler(inventory);
+        if (side == null)
+            return inventory;
+        return new SidedItemHandler(inventory);
     }
 
     @Override

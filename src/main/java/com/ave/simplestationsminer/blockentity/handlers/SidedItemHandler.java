@@ -1,60 +1,46 @@
 package com.ave.simplestationsminer.blockentity.handlers;
 
-import com.ave.simplestationsminer.Config;
-import com.ave.simplestationsminer.SimpleStationsMiner;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
-import com.ave.simplestationsminer.blockentity.ModContainer;
-import com.ave.simplestationsminer.datagen.ModTags;
 
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 
-public class SidedItemHandler extends ItemStackHandler {
-    public SidedItemHandler(int size) {
-        super(size);
+public class SidedItemHandler implements IItemHandler {
+    private final CommonItemHandler parent;
+
+    public SidedItemHandler(CommonItemHandler parent) {
+        this.parent = parent;
     }
 
     @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
-        if (slot == ModContainer.OUTPUT_SLOT)
-            return false;
-        if (slot == MinerBlockEntity.FUEL_SLOT)
-            return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL
-                    || stack.getItem() == Items.COAL_BLOCK;
+    public int getSlots() {
+        return parent.getSlots();
+    }
 
-        if (slot == MinerBlockEntity.COOLANT_SLOT)
-            return Config.isExtendedMod()
-                    && (stack.getItem() == Items.LAPIS_BLOCK || stack.getItem() == Items.LAPIS_LAZULI);
-        if (slot == MinerBlockEntity.REDSTONE_SLOT)
-            return Config.isExtendedMod()
-                    && (stack.getItem() == Items.REDSTONE_BLOCK || stack.getItem() == Items.REDSTONE);
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return parent.getStackInSlot(slot);
+    }
 
-        if (slot == MinerBlockEntity.TYPE_SLOT)
-            return stack.is(ModTags.Items.MINEABLE_TAG);
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        return parent.insertItem(slot, stack, simulate);
+    }
 
-        if (slot == MinerBlockEntity.PORTAL_SLOT)
-            return stack.getItem().equals(SimpleStationsMiner.PORTAL.get());
-
-        if (slot == MinerBlockEntity.DRILL_SLOT)
-            return stack.getItem().equals(SimpleStationsMiner.DRILL_ITEM.get()) ||
-                    stack.getItem().equals(SimpleStationsMiner.DRILL_ITEM_2.get()) ||
-                    stack.getItem().equals(SimpleStationsMiner.DRILL_ITEM_3.get());
-
-        return super.isItemValid(slot, stack);
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (slot != MinerBlockEntity.OUTPUT_SLOT)
+            return ItemStack.EMPTY;
+        return parent.extractItem(slot, amount, simulate);
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        if (slot == MinerBlockEntity.TYPE_SLOT || slot == MinerBlockEntity.PORTAL_SLOT)
-            return 1;
-        if (slot == MinerBlockEntity.DRILL_SLOT)
-            return 2;
-        return super.getSlotLimit(slot);
+        return parent.getSlotLimit(slot);
     }
 
-    public NonNullList<ItemStack> getAsList() {
-        return stacks;
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return parent.isItemValid(slot, stack);
     }
 }

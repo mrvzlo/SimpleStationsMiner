@@ -2,9 +2,6 @@ package com.ave.simplestationsminer.blockentity.partblock;
 
 import com.ave.simplestationsminer.blockentity.ModBlockEntities;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
-import com.ave.simplestationsminer.blockentity.handlers.InputItemHandler;
-import com.ave.simplestationsminer.blockentity.handlers.OutputItemHandler;
-import com.ave.simplestationsminer.blockentity.handlers.SidedItemHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -51,10 +48,7 @@ public class PartBlockEntity extends BlockEntity {
         var controller = this.getController(be);
         if (controller == null)
             return null;
-        var inventory = controller.inventory;
-        if (side == Direction.DOWN)
-            return new OutputItemHandler(inventory);
-        return new InputItemHandler(inventory);
+        return controller.getItemHandler(side);
     }
 
     public EnergyStorage getEnergyStorage(PartBlockEntity be) {
