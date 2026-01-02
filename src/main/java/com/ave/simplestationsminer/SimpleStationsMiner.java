@@ -3,7 +3,7 @@ package com.ave.simplestationsminer;
 import org.slf4j.Logger;
 
 import com.ave.simplestationscore.partblock.PartBlockEntity;
-import com.ave.simplestationscore.registrations.RegistrationManager;
+import com.ave.simplestationscore.registrations.CoreRegistrations;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
 import com.mojang.logging.LogUtils;
 
@@ -28,7 +28,7 @@ public class SimpleStationsMiner {
         }
 
         private void addCreative(BuildCreativeModeTabContentsEvent event) {
-                if (!event.getTab().equals(RegistrationManager.CREATIVE_TAB.get()))
+                if (!event.getTab().equals(CoreRegistrations.CREATIVE_TAB.get()))
                         return;
                 event.accept(Registrations.MINER.getItem());
                 event.accept(Registrations.DRILL_ITEM.get());
@@ -43,6 +43,6 @@ public class SimpleStationsMiner {
                                 Registrations.MINER.getBlock());
                 event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                                 (level, pos, state, be, side) -> PartBlockEntity.getEnergyStorage((PartBlockEntity) be),
-                                RegistrationManager.PART.getBlock());
+                                CoreRegistrations.PART.getBlock());
         }
 }
