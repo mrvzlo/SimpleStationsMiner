@@ -2,6 +2,7 @@ package com.ave.simplestationsminer.renderer;
 
 import com.ave.simplestationsminer.blockentity.MinerBlock;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
+import com.ave.simplestationsminer.blockentity.UpgradeType;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
@@ -31,29 +32,30 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         Direction direction = be.getBlockState().getValue(MinerBlock.FACING);
         long gameTime = be.getLevel().getGameTime();
-        float rotation = be.type == null ? 0 : ((gameTime * 4) % 360);
-        if (be.drill != null) {
-            var drill = new ItemStack(be.drill);
+        float rotation = be.type == -1 ? 0 : ((gameTime * 4) % 360);
+        if (be.drill != UpgradeType.Unknown) {
+            var drill = new ItemStack(be.drill.item);
             if (be.drillCount > 0)
                 drawBlock(pose, itemRenderer, drill, be, buf, -0.5f, -0.5f, direction, 1, rotation);
             if (be.drillCount > 1)
                 drawBlock(pose, itemRenderer, drill, be, buf, -0.5f, 1.5f, direction, 1, rotation);
         }
 
-        if (be.type == null)
+        if (be.type == -1)
             return;
 
-        ItemStack stack = new ItemStack(be.type);
+        var stack = be.getProduct(false);
 
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 0), 0.5f, direction, 0.7f, 0);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 250), 0.4f, direction, 0.7f, 0);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 500), 0.5f, direction, 0.7f, 0);
-        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime, 750), 0.6f, direction, 0.7f, 0);
+        int blockIndex = (int) ((gameTime / 200) % 4);
+        float[] yScales = { 0.5f, 0.4f, 0.5f, 0.6f };
+
+        drawBlock(pose, itemRenderer, stack, be, buf, getZShift(gameTime), yScales[blockIndex],
+                direction, 0.7f, 0);
 
     }
 
-    private float getZShift(long gameTime, int delay) {
-        float shift = ((gameTime + delay) % 1000) / 200f - 0.5f;
+    private float getZShift(long gameTime) {
+        float shift = (gameTime % 200) / 100f - 0.5f;
         return Math.clamp(shift, -0.5f, 1.5f);
     }
 

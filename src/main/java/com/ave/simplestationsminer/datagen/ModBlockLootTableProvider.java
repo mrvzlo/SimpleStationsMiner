@@ -3,7 +3,7 @@ package com.ave.simplestationsminer.datagen;
 import java.util.List;
 import java.util.Set;
 
-import com.ave.simplestationsminer.SimpleStationsMiner;
+import com.ave.simplestationsminer.Registrations;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -17,11 +17,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        dropSelf(SimpleStationsMiner.MINER_BLOCK.get());
+        dropSelf(Registrations.MINER.getBlock());
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return List.of(SimpleStationsMiner.MINER_BLOCK.get());
+        return List.of(Registrations.MINER.getBlock());
     }
 }

@@ -3,6 +3,7 @@ package com.ave.simplestationsminer.recipes;
 import java.util.List;
 
 import com.ave.simplestationsminer.Config;
+import com.ave.simplestationsminer.Registrations;
 import com.ave.simplestationsminer.SimpleStationsMiner;
 import com.ave.simplestationsminer.blockentity.managers.WorkManager;
 import com.ave.simplestationsminer.datagen.ModTags;
@@ -49,7 +50,7 @@ public class JEIModPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(new ItemStack(SimpleStationsMiner.MINER_BLOCK.get()), MinerRecipeCategory.REGULAR);
+        registry.addRecipeCatalyst(new ItemStack(Registrations.MINER.getBlock()), MinerRecipeCategory.REGULAR);
     }
 
     @Override

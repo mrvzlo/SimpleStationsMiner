@@ -7,7 +7,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
 // Demonstrates how to use Neo's config APIs
-@SuppressWarnings("removal")
 @EventBusSubscriber(modid = SimpleStationsMiner.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class Config {
         private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -21,11 +20,9 @@ public class Config {
         public static ModConfigSpec.IntValue FUEL_PER_COAL;
         public static ModConfigSpec.IntValue FUEL_CAPACITY;
         public static ModConfigSpec.IntValue MAX_Y;
-        public static ModConfigSpec.EnumValue<WorkMode> WORK_MODE;
 
-        public static boolean isExtendedMod() {
-                return WORK_MODE.get() == WorkMode.Extended;
-        }
+        public static ModConfigSpec.IntValue COOLANT_USAGE;
+        public static ModConfigSpec.IntValue CATALYST_USAGE;
 
         static {
                 setupGenerationConfig();
@@ -54,9 +51,12 @@ public class Config {
                 MAX_Y = BUILDER
                                 .comment("Highest Y for miner\n Default: 20")
                                 .defineInRange("max_y", 20, -1000, 1000);
-                WORK_MODE = BUILDER
-                                .comment("Extended work mode forces catalyst and coolant usage\n Default: Basic")
-                                .defineEnum("work_mode", WorkMode.Extended, WorkMode.Basic, WorkMode.Extended);
+                COOLANT_USAGE = BUILDER
+                                .comment("Coolant usage per ore\n Default: 1")
+                                .defineInRange("coolant_usage", 1, 0, 64);
+                CATALYST_USAGE = BUILDER
+                                .comment("Catalyst usage per ore\n Default: 1")
+                                .defineInRange("catalyst_usage", 1, 0, 64);
         }
 
         @SubscribeEvent

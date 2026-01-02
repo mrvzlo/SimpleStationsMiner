@@ -1,14 +1,14 @@
 package com.ave.simplestationsminer.blockentity;
 
-import com.ave.simplestationsminer.SimpleStationsMiner;
+import com.ave.simplestationsminer.Registrations;
 import net.minecraft.world.item.Item;
 
 public enum UpgradeType {
     Unknown(null),
-    Portal(SimpleStationsMiner.PORTAL.get()),
-    Drill1(SimpleStationsMiner.DRILL_ITEM.get()),
-    Drill2(SimpleStationsMiner.DRILL_ITEM_2.get()),
-    Drill3(SimpleStationsMiner.DRILL_ITEM_3.get()),;
+    Portal(Registrations.PORTAL.get()),
+    Drill1(Registrations.DRILL_ITEM.get()),
+    Drill2(Registrations.DRILL_ITEM_2.get()),
+    Drill3(Registrations.DRILL_ITEM_3.get()),;
 
     public final Item item;
 

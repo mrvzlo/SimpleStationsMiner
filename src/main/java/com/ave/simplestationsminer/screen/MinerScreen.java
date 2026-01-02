@@ -3,74 +3,65 @@ package com.ave.simplestationsminer.screen;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ave.simplestationscore.mainblock.BaseStationBlockEntity;
+import com.ave.simplestationscore.screen.BaseStationMenu;
+import com.ave.simplestationscore.screen.BaseStationScreen;
 import com.ave.simplestationsminer.Config;
 import com.ave.simplestationsminer.SimpleStationsMiner;
 import com.ave.simplestationsminer.blockentity.MinerBlockEntity;
-import com.ave.simplestationsminer.uihelpers.NumToString;
 import com.ave.simplestationsminer.uihelpers.UIBlocks;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
+public class MinerScreen extends BaseStationScreen {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(SimpleStationsMiner.MODID,
             "textures/gui/base_miner_gui.png");
-    private static final ResourceLocation TEXTURE_MIN = ResourceLocation.fromNamespaceAndPath(SimpleStationsMiner.MODID,
-            "textures/gui/base_miner_gui_min.png");
 
-    public MinerScreen(MinerMenu menu, Inventory inventory, Component title) {
+    public MinerScreen(BaseStationMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 
     @Override
-    public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTicks) {
-        super.render(gfx, mouseX, mouseY, partialTicks);
-        this.renderTooltip(gfx, mouseX, mouseY);
+    public Component getTitle() {
+        return Component.translatable("screen.simplestationsminer.miner");
+    }
 
+    @Override
+    protected void renderMoreTooltips(GuiGraphics gfx, int mouseX, int mouseY, BaseStationBlockEntity station) {
         if (!(menu.blockEntity instanceof MinerBlockEntity miner))
             return;
 
-        int startX = (width - imageWidth) / 2;
-        int startY = (height - imageHeight) / 2;
+        int startX = getStartX();
+        int startY = getStartY();
 
-        if (UIBlocks.FUEL_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            String fuelPart = NumToString.parse(miner.fuel.getEnergyStored(), "RF / ")
-                    + NumToString.parse(Config.FUEL_CAPACITY.get(), "RF");
-            List<Component> fuelText = Arrays.asList(Component.translatable("screen.simplestationsminer.fuel"),
-                    Component.literal(fuelPart));
-            gfx.renderComponentTooltip(font, fuelText, mouseX, mouseY);
-        }
+        renderPowerTooltip(gfx, UIBlocks.FUEL_BAR, mouseX, mouseY, station);
+        renderProgressTooltip(gfx, UIBlocks.PROGRESS_BAR, mouseX, mouseY, station);
 
-        if (Config.isExtendedMod() && UIBlocks.COOL_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            String coolantPart = miner.coolant + " / " + Config.MAX_COOLANT.get();
+        if (UIBlocks.COOL_BAR.isHovered(mouseX - startX, mouseY - startY)) {
+            var coolant = miner.resources.get(MinerBlockEntity.COOLANT_SLOT).get();
+            String coolantPart = coolant + " / " + Config.MAX_COOLANT.get();
             List<Component> coolantText = Arrays.asList(Component.translatable("screen.simplestationsminer.coolant"),
                     Component.literal(coolantPart));
             gfx.renderComponentTooltip(font, coolantText, mouseX, mouseY);
         }
 
-        if (Config.isExtendedMod() && UIBlocks.CATA_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            String redstonePart = miner.redstone + " / " + Config.MAX_CATALYST.get();
+        if (UIBlocks.CATA_BAR.isHovered(mouseX - startX, mouseY - startY)) {
+            var redstone = miner.resources.get(MinerBlockEntity.REDSTONE_SLOT).get();
+            var redstonePart = redstone + " / " + Config.MAX_CATALYST.get();
             List<Component> redstoneText = Arrays.asList(Component.translatable("screen.simplestationsminer.catalysis"),
                     Component.literal(redstonePart));
             gfx.renderComponentTooltip(font, redstoneText, mouseX, mouseY);
         }
 
-        if (miner.progress > 0 && UIBlocks.PROGRESS_BAR.isHovered(mouseX - startX, mouseY - startY)) {
-            int progressPart = (int) Math.ceil(100 * miner.progress / Config.MAX_PROGRESS.get());
-            gfx.renderTooltip(font, Component.literal(progressPart + "%"), mouseX, mouseY);
-        }
-
-        if (miner.type == null && !miner.invalidDepth
+        if (miner.type == -1 && !miner.invalidDepth
                 && UIBlocks.FILTER_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
             gfx.renderTooltip(font, Component.translatable("screen.simplestationsminer.filter"), mouseX, mouseY);
         }
 
-        if (!miner.hasNetherUpdate && UIBlocks.PORTAL_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
+        if (!miner.hasNetherUpgrade && UIBlocks.PORTAL_SLOT.isHovered(mouseX - startX, mouseY - startY)) {
             gfx.renderTooltip(font, Component.translatable("screen.simplestationsminer.need_portal"), mouseX, mouseY);
         }
 
@@ -85,26 +76,15 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float tick, int mx, int my) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Config.isExtendedMod() ? TEXTURE : TEXTURE_MIN);
-        int x = (width - imageWidth) / 2;
-        int y = (height - imageHeight) / 2;
-        graphics.blit(Config.isExtendedMod() ? TEXTURE : TEXTURE_MIN, x, y, 0, 0, imageWidth, imageHeight, imageWidth,
-                imageHeight);
-
-        Component title = Component.translatable("screen.simplestationsminer.miner");
-        int textWidth = font.width(title);
-        int centerX = (width / 2) - (textWidth / 2);
-        graphics.drawString(font, title, centerX, y + 6, 0x222222, false);
-
+        super.renderBg(graphics, tick, mx, my);
         if (!(menu.blockEntity instanceof MinerBlockEntity miner))
             return;
 
+        int x = getStartX();
+        int y = getStartY();
         int tickAlpha = 96 + (int) (63 * Math.sin(System.currentTimeMillis() / 400.0));
         int borderColor = (tickAlpha << 24) | 0xFF0000;
-        float progressPart = miner.progress / Config.MAX_PROGRESS.get();
-        UIBlocks.PROGRESS_BAR.drawProgressToRight(graphics, x, y, progressPart, 0xFFCCFEDD);
+        renderProgressBar(graphics, miner, UIBlocks.PROGRESS_BAR);
 
         if (miner.invalidDepth) {
             Component error = Component.literal("Y > " + Config.MAX_Y.get());
@@ -112,27 +92,29 @@ public class MinerScreen extends AbstractContainerScreen<MinerMenu> {
             return;
         }
 
-        float fuelPart = (float) miner.fuel.getEnergyStored() / Config.FUEL_CAPACITY.get();
-        UIBlocks.FUEL_BAR.drawProgressToTop(graphics, x, y, fuelPart, 0xAA225522);
-        if (fuelPart == 0)
-            UIBlocks.FUEL_SLOT.drawBorder(graphics, x, y, borderColor);
+        renderPowerBar(graphics, miner, UIBlocks.FUEL_BAR, UIBlocks.FUEL_SLOT);
+
         if (miner.drillCount == 0)
             UIBlocks.DRILL_SLOT.drawBorder(graphics, x, y, borderColor);
         if (!miner.isValidWorld())
             UIBlocks.PORTAL_SLOT.drawBorder(graphics, x, y, borderColor);
 
-        if (!Config.isExtendedMod())
-            return;
-
-        float coolantPart = (float) miner.coolant / Config.MAX_COOLANT.get();
+        var coolRes = miner.resources.get(MinerBlockEntity.COOLANT_SLOT);
+        var coolantPart = coolRes.getPercent();
         UIBlocks.COOL_BAR.drawProgressToTop(graphics, x, y, coolantPart, 0xAA3333AA);
 
-        float redstonePart = (float) miner.redstone / Config.MAX_CATALYST.get();
+        var redRes = miner.resources.get(MinerBlockEntity.REDSTONE_SLOT);
+        var redstonePart = redRes.getPercent();
         UIBlocks.CATA_BAR.drawProgressToTop(graphics, x, y, redstonePart, 0xAABB2211);
 
-        if (coolantPart == 0)
+        if (!coolRes.isEnough())
             UIBlocks.COOL_SLOT.drawBorder(graphics, x, y, borderColor);
-        if (redstonePart == 0)
+        if (!redRes.isEnough())
             UIBlocks.CATA_SLOT.drawBorder(graphics, x, y, borderColor);
+    }
+
+    @Override
+    public ResourceLocation getTexture() {
+        return TEXTURE;
     }
 }

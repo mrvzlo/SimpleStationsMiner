@@ -28,6 +28,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
                 .add(Items.ANDESITE)
                 .add(Items.DIORITE)
                 .add(Items.OBSIDIAN)
+                .add(Items.NETHERRACK)
                 .addTag(ItemTags.COAL_ORES)
                 .addTag(ItemTags.IRON_ORES)
                 .addTag(ItemTags.GOLD_ORES)

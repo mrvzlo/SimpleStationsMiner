@@ -5,7 +5,10 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import com.ave.simplestationsminer.Config;
+import com.ave.simplestationsminer.Registrations;
 import com.ave.simplestationsminer.SimpleStationsMiner;
+import com.ave.simplestationsminer.blockentity.managers.OreHashManager;
+import com.ave.simplestationsminer.blockentity.managers.UpgradeManager;
 import com.ave.simplestationsminer.uihelpers.UIBlocks;
 import com.google.common.collect.Lists;
 
@@ -30,21 +33,16 @@ public class MinerRecipeCategory implements IRecipeCategory<SimpleRecipe> {
                         "regular");
         private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(SimpleStationsMiner.MODID,
                         "textures/gui/jei.png");
-        private static final ResourceLocation TEXTURE_MIN = ResourceLocation.fromNamespaceAndPath(
-                        SimpleStationsMiner.MODID,
-                        "textures/gui/jei_min.png");
 
         public IGuiHelper guiHelper;
         public static RecipeType<SimpleRecipe> REGULAR = RecipeType.create(SimpleStationsMiner.MODID, "regular",
                         SimpleRecipe.class);
 
         private final IDrawableStatic bg;
-        private final IDrawableStatic bg_min;
 
         public MinerRecipeCategory(IGuiHelper guiHelper) {
                 this.guiHelper = guiHelper;
                 bg = guiHelper.createDrawable(TEXTURE, 0, 0, 176, 80);
-                bg_min = guiHelper.createDrawable(TEXTURE_MIN, 0, 0, 176, 80);
         }
 
         @Override
@@ -60,28 +58,35 @@ public class MinerRecipeCategory implements IRecipeCategory<SimpleRecipe> {
         @Override
         public @Nullable IDrawable getIcon() {
                 return guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK,
-                                new ItemStack(SimpleStationsMiner.MINER_BLOCK_ITEM.get()));
+                                new ItemStack(Registrations.MINER.getItem()));
         }
 
         @Override
         public void setRecipe(IRecipeLayoutBuilder builder, SimpleRecipe recipe, IFocusGroup focuses) {
-                if (Config.isExtendedMod()) {
-                        builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.CATA_SLOT.left, UIBlocks.CATA_SLOT.top)
-                                        .addIngredients(Ingredient.of(Items.REDSTONE));
-                        builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.COOL_SLOT.left, UIBlocks.COOL_SLOT.top)
-                                        .addIngredients(Ingredient.of(Items.LAPIS_LAZULI));
-                }
+                builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.CATA_SLOT.left, UIBlocks.CATA_SLOT.top)
+                                .addItemStack(new ItemStack(Items.REDSTONE, Config.CATALYST_USAGE.get()));
+                builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.COOL_SLOT.left, UIBlocks.COOL_SLOT.top)
+                                .addItemStack(new ItemStack(Items.LAPIS_LAZULI, Config.COOLANT_USAGE.get()));
                 builder.addSlot(RecipeIngredientRole.INPUT, UIBlocks.FUEL_SLOT.left, UIBlocks.FUEL_SLOT.top)
                                 .addIngredients(Ingredient.of(Items.COAL));
                 builder.addSlot(RecipeIngredientRole.OUTPUT, UIBlocks.OUT_SLOT.left, UIBlocks.OUT_SLOT.top)
                                 .addItemStack(new ItemStack(recipe.filter.getItem(), recipe.output));
                 builder.addSlot(RecipeIngredientRole.CATALYST, UIBlocks.FILTER_SLOT.left, UIBlocks.FILTER_SLOT.top)
                                 .addIngredients(Ingredient.of(recipe.filter.getItem()));
+
+                var isNether = !OreHashManager.isRegular(recipe.filter);
+                if (isNether)
+                        builder.addSlot(RecipeIngredientRole.CATALYST, UIBlocks.PORTAL_SLOT.left,
+                                        UIBlocks.PORTAL_SLOT.top)
+                                        .addIngredients(Ingredient.of(Registrations.PORTAL));
+                var drill = UpgradeManager.getMinDrill(recipe.filter.getItem());
+                builder.addSlot(RecipeIngredientRole.CATALYST, UIBlocks.DRILL_SLOT.left, UIBlocks.DRILL_SLOT.top)
+                                .addIngredients(Ingredient.of(drill.item));
         }
 
         @Override
         public IDrawable getBackground() {
-                return Config.isExtendedMod() ? bg : bg_min;
+                return bg;
         }
 
         @Override

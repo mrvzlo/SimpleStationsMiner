@@ -14,7 +14,8 @@
   "simplestationsminer.configuration.fuel_rf": "RF gain from signle coal",
   "simplestationsminer.configuration.fuel_max": "Energy storage capacity in RF",
   "simplestationsminer.configuration.max_y": "Max height",
-  "simplestationsminer.configuration.work_mode": "Work mode",
+  "simplestationsminer.configuration.coolant_usage": "Coolant usage per cycle",
+  "simplestationsminer.configuration.catalyst_usage": "Catalyst usage per cycle",
 
   "screen.simplestationsminer.miner": "Mining station",
   "screen.simplestationsminer.recipes": "Miner recipes",

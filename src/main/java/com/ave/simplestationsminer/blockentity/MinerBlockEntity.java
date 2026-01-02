@@ -2,132 +2,128 @@ package com.ave.simplestationsminer.blockentity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ave.simplestationscore.mainblock.BaseStationBlockEntity;
+import com.ave.simplestationscore.resources.EnergyResource;
 import com.ave.simplestationsminer.Config;
-import com.ave.simplestationsminer.blockentity.managers.ExportManager;
-import com.ave.simplestationsminer.blockentity.managers.ResourceManager;
+import com.ave.simplestationsminer.Registrations;
+import com.ave.simplestationsminer.blockentity.helpers.MinerFluidItemResource;
+import com.ave.simplestationsminer.blockentity.helpers.MinerItemHandler;
+import com.ave.simplestationsminer.blockentity.managers.OreHashManager;
 import com.ave.simplestationsminer.blockentity.managers.UpgradeManager;
 import com.ave.simplestationsminer.blockentity.managers.WorkManager;
+import com.ave.simplestationsminer.screen.MinerMenu;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.EnergyStorage;
 
-public class MinerBlockEntity extends ModContainer {
-    public EnergyStorage fuel;
-    public Item type = null;
-    public float progress = 0;
-    public int coolant = 0;
-    public int redstone = 0;
-    public boolean working = false;
+public class MinerBlockEntity extends BaseStationBlockEntity {
+    public static final int TYPE_SLOT = 2;
+    public static final int COOLANT_SLOT = 3;
+    public static final int REDSTONE_SLOT = 4;
+    public static final int PORTAL_SLOT = 5;
+    public static final int DRILL_SLOT = 6;
+
     public boolean invalidDepth = false;
 
     public List<UpgradeType> upgrades = new ArrayList<UpgradeType>();
-    public boolean hasNetherUpdate = false;
-    public Item drill = null;
+    public boolean hasNetherUpgrade = false;
+    public UpgradeType drill = UpgradeType.Unknown;
     public int drillCount = 0;
 
-    public float speed = 1;
-    public int outputSize = 1;
-    public int powerConsuption = 0;
-
     public int upgradesHash = 0;
-    public int soundCooldown = 0;
 
     public MinerBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MINER_BLOCK_ENTITY.get(), pos, state, 7);
+        super(Registrations.MINER.getEntity(), pos, state);
+
         if (pos != null)
             invalidDepth = pos.getY() > Config.MAX_Y.get();
-        fuel = new EnergyStorage(Config.FUEL_CAPACITY.get());
+
+        inventory = new MinerItemHandler(7) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+            }
+        };
+
+        resources.put(FUEL_SLOT, new EnergyResource(Config.FUEL_CAPACITY.get(), 16, Config.FUEL_PER_COAL.get()));
+        var coolRes = new MinerFluidItemResource(Config.MAX_COOLANT.get(), Config.COOLANT_USAGE.get(), "coolant");
+        resources.put(COOLANT_SLOT, coolRes);
+        var cataRes = new MinerFluidItemResource(Config.MAX_CATALYST.get(), Config.CATALYST_USAGE.get(), "catalyst");
+        resources.put(REDSTONE_SLOT, cataRes);
     }
 
+    @Override()
     public void tick() {
-        if (level.isClientSide || invalidDepth)
+        if (invalidDepth)
             return;
 
-        if (progress >= Config.MAX_PROGRESS.get())
-            progress -= Config.MAX_PROGRESS.get();
-
-        var shouldUpdate = checkNewType() || UpgradeManager.checkUpgradeSlots(this);
-        ResourceManager.checkAllResources(this);
-        working = WorkManager.getWorking(this);
-
-        if (shouldUpdate)
-            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
-
-        ExportManager.pushOutput(this);
-        if (type == null || !working)
-            return;
-
-        WorkManager.performWorkTick(this);
-
-        if (progress < Config.MAX_PROGRESS.get())
-            return;
-
-        WorkManager.performWorkEnd(this);
-        setChanged();
+        if (!level.isClientSide) {
+            var shouldUpdate = UpgradeManager.checkUpgradeSlots(this);
+            if (shouldUpdate)
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
+        super.tick();
     }
 
-    private boolean checkNewType() {
-        Item newType = getCurrentFilter();
-        if (type == null && newType == null || type != null && type.equals(newType))
-            return false;
-
-        type = newType;
-        progress = 0;
+    @Override
+    protected void preWorkTick() {
         speed = WorkManager.getSpeedValue(this);
-        outputSize = WorkManager.getOutputSize(type);
-        return true;
-    }
-
-    public boolean isValidWorld() {
-        if (this.type == null || hasNetherUpdate)
-            return true;
-        return !this.type.toString().contains("nether");
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        saveAll(tag);
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
-        super.handleUpdateTag(tag, registries);
-        saveAll(tag);
     }
 
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        type = getCurrentFilter();
-        fuel = new EnergyStorage(Config.FUEL_CAPACITY.get(), Config.FUEL_CAPACITY.get(), Config.FUEL_CAPACITY.get(),
-                tag.getInt("fuel"));
-        progress = tag.getFloat("progress");
-        coolant = tag.getInt("coolant");
-        redstone = tag.getInt("redstone");
         upgrades.clear();
-        outputSize = WorkManager.getOutputSize(type);
         for (byte up : tag.getByteArray("upgrades"))
             upgrades.add(UpgradeType.values()[up]);
         UpgradeManager.applyUpgrades(this);
-        speed = WorkManager.getSpeedValue(this);
     }
 
-    private void saveAll(CompoundTag tag) {
-        tag.putInt("fuel", fuel.getEnergyStored());
-        tag.putFloat("progress", progress);
-        tag.putInt("coolant", coolant);
-        tag.putInt("redstone", redstone);
+    @Override
+    protected void saveAll(CompoundTag tag) {
+        super.saveAll(tag);
         tag.putByteArray("upgrades", upgrades.stream().map(x -> (byte) x.ordinal()).toList());
     }
 
-    private Item getCurrentFilter() {
-        ItemStack stack = inventory.getStackInSlot(TYPE_SLOT);
-        return stack.isEmpty() ? null : stack.getItem();
+    public SoundEvent getWorkSound() {
+        return SoundEvents.DEEPSLATE_BREAK;
+    }
+
+    @Override
+    public MinerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new MinerMenu(containerId, inventory, this);
+    }
+
+    @Override
+    public int getMaxProgress() {
+        return Config.MAX_PROGRESS.getAsInt();
+    }
+
+    @Override
+    public ItemStack getProduct(boolean __) {
+        if (!isValidWorld())
+            return ItemStack.EMPTY;
+        var stack = OreHashManager.getItemStack(type);
+        if (drill.ordinal() < UpgradeManager.getMinDrill(stack.getItem()).ordinal())
+            return ItemStack.EMPTY;
+        return stack;
+    }
+
+    @Override
+    protected int getCurrentType() {
+        return OreHashManager.getHash(inventory.getStackInSlot(TYPE_SLOT));
+    }
+
+    public boolean isValidWorld() {
+        return hasNetherUpgrade || OreHashManager.isRegular(type);
     }
 
 }
