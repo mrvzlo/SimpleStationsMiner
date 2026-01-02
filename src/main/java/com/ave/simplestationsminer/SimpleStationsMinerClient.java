@@ -1,6 +1,6 @@
 package com.ave.simplestationsminer;
 
-import com.ave.simplestationscore.partblock.PartBlockEntity;
+import com.ave.simplestationscore.registrations.RegistrationManager;
 import com.ave.simplestationsminer.renderer.MinerRenderer;
 import com.ave.simplestationsminer.screen.MinerScreen;
 
@@ -10,7 +10,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -39,12 +38,10 @@ public class SimpleStationsMinerClient {
 
     @SubscribeEvent
     public static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, Registrations.MINER.getEntity(),
-                (be, direction) -> be.getItemHandler(direction));
-        PartBlockEntity.registerCaps(event);
+        RegistrationManager.registerCaps(event, Registrations.MINER.getEntity());
     }
 
-    @SubscribeEvent // on the mod event bus only on the physical client
+    @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(Registrations.MINER.getEntity(), MinerRenderer::new);
     }

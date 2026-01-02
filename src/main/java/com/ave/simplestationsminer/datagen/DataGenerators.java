@@ -26,7 +26,7 @@ public class DataGenerators {
         ExistingFileHelper helper = event.getExistingFileHelper();
 
         if (event.includeServer()) {
-            ModBlockTagProvider blockTags = new ModBlockTagProvider(out, lookup, helper);
+            var blockTags = new ModBlockTagProvider(out, lookup, helper);
             generator.addProvider(true, blockTags);
             generator.addProvider(true, new ModItemTagProvider(out, lookup, blockTags, helper));
             generator.addProvider(event.includeServer(), new ModRecipeProvider(out, lookup));

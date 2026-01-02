@@ -2,10 +2,12 @@ package com.ave.simplestationsminer.datagen;
 
 import java.util.concurrent.CompletableFuture;
 
+import com.ave.simplestationsminer.Registrations;
 import com.ave.simplestationsminer.SimpleStationsMiner;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -17,5 +19,7 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(Registrations.MINER.getBlock());
     }
 }
