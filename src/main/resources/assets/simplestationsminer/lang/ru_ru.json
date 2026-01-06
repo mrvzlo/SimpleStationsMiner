@@ -1,6 +1,6 @@
 {
   "itemGroup.simplestationsminer": "Простые Шахтёрские Станции",
-  "block.simplestationsminer.miner": "Шахтёрская станция",
+  "item.simplestationsminer.miner": "Шахтёрская станция",
   "item.simplestationsminer.portal": "Карманный портал",
   "item.simplestationsminer.drill": "Железный бур",
   "item.simplestationsminer.drill_2": "Алмазный бур",

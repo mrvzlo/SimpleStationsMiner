@@ -1,28 +1,26 @@
 package com.ave.simplestationsminer;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-// An example config class. This is not required, but it's a good idea to have one to keep your config organized.
-// Demonstrates how to use Neo's config APIs
-@EventBusSubscriber(modid = SimpleStationsMiner.MODID, bus = EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = SimpleStationsMiner.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
-        private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-        static ModConfigSpec SPEC;
+        private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+        static ForgeConfigSpec SPEC;
 
-        public static ModConfigSpec.IntValue ENERGY_PER_TICK;
-        public static ModConfigSpec.IntValue MAX_PROGRESS;
-        public static ModConfigSpec.IntValue MAX_COOLANT;
-        public static ModConfigSpec.IntValue MAX_CATALYST;
+        public static ForgeConfigSpec.IntValue ENERGY_PER_TICK;
+        public static ForgeConfigSpec.IntValue MAX_PROGRESS;
+        public static ForgeConfigSpec.IntValue MAX_COOLANT;
+        public static ForgeConfigSpec.IntValue MAX_CATALYST;
 
-        public static ModConfigSpec.IntValue FUEL_PER_COAL;
-        public static ModConfigSpec.IntValue FUEL_CAPACITY;
-        public static ModConfigSpec.IntValue MAX_Y;
+        public static ForgeConfigSpec.IntValue FUEL_PER_COAL;
+        public static ForgeConfigSpec.IntValue FUEL_CAPACITY;
+        public static ForgeConfigSpec.IntValue MAX_Y;
 
-        public static ModConfigSpec.IntValue COOLANT_USAGE;
-        public static ModConfigSpec.IntValue CATALYST_USAGE;
+        public static ForgeConfigSpec.IntValue COOLANT_USAGE;
+        public static ForgeConfigSpec.IntValue CATALYST_USAGE;
 
         static {
                 setupGenerationConfig();

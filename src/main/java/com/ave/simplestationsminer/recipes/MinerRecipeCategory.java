@@ -78,7 +78,7 @@ public class MinerRecipeCategory implements IRecipeCategory<SimpleRecipe> {
                 if (isNether)
                         builder.addSlot(RecipeIngredientRole.CATALYST, UIBlocks.PORTAL_SLOT.left,
                                         UIBlocks.PORTAL_SLOT.top)
-                                        .addIngredients(Ingredient.of(Registrations.PORTAL));
+                                        .addIngredients(Ingredient.of(Registrations.PORTAL.get()));
                 var drill = UpgradeManager.getMinDrill(recipe.filter.getItem());
                 builder.addSlot(RecipeIngredientRole.CATALYST, UIBlocks.DRILL_SLOT.left, UIBlocks.DRILL_SLOT.top)
                                 .addIngredients(Ingredient.of(drill.item));

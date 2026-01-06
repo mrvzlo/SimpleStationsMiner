@@ -104,7 +104,7 @@ public class MinerBlockEntity extends BaseStationBlockEntity {
 
     @Override
     public int getMaxProgress() {
-        return Config.MAX_PROGRESS.getAsInt();
+        return Config.MAX_PROGRESS.get();
     }
 
     @Override
