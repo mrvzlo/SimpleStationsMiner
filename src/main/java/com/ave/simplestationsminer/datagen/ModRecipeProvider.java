@@ -1,24 +1,23 @@
 package com.ave.simplestationsminer.datagen;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import com.ave.simplestationsminer.Registrations;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 
 public class ModRecipeProvider extends RecipeProvider {
-        public ModRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-                super(output, registries);
+        public ModRecipeProvider(PackOutput output) {
+                super(output);
         }
 
         @Override
-        protected void buildRecipes(RecipeOutput consumer) {
+        protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
                 ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registrations.DRILL_ITEM.get())
                                 .pattern("LIL")
                                 .pattern("RIR")

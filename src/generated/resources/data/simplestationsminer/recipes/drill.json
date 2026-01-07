@@ -21,7 +21,7 @@
     "IBI"
   ],
   "result": {
-    "count": 1,
-    "id": "simplestationsminer:drill"
-  }
+    "item": "simplestationsminer:drill"
+  },
+  "show_notification": true
 }

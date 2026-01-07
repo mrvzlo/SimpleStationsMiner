@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:iron_ingot"
+            "items": [
+              "minecraft:iron_ingot"
+            ]
           }
         ]
       },
@@ -20,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_iron"
+      "has_iron",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "simplestationsminer:drill"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

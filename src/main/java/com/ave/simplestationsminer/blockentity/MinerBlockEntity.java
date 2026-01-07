@@ -79,8 +79,8 @@ public class MinerBlockEntity extends BaseStationBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         upgrades.clear();
         for (byte up : tag.getByteArray("upgrades"))
             upgrades.add(UpgradeType.values()[up]);

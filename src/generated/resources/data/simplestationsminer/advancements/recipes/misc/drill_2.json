@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:diamond"
+            "items": [
+              "minecraft:diamond"
+            ]
           }
         ]
       },
@@ -13,20 +15,21 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "simplestationsminer:drill_3"
+        "recipe": "simplestationsminer:drill_2"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_diamond"
+      "has_diamond",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "simplestationsminer:drill_3"
+      "simplestationsminer:drill_2"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

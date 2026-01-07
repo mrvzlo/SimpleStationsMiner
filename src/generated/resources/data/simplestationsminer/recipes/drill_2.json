@@ -15,7 +15,7 @@
     "OOO"
   ],
   "result": {
-    "count": 1,
-    "id": "simplestationsminer:drill_2"
-  }
+    "item": "simplestationsminer:drill_2"
+  },
+  "show_notification": true
 }

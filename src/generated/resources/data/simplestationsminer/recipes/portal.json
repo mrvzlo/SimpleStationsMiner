@@ -15,7 +15,7 @@
     "OOO"
   ],
   "result": {
-    "count": 1,
-    "id": "simplestationsminer:portal"
-  }
+    "item": "simplestationsminer:portal"
+  },
+  "show_notification": true
 }

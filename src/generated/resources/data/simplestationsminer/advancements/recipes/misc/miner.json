@@ -1,11 +1,13 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_diamond": {
+    "has_iron": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:diamond"
+            "items": [
+              "minecraft:iron_ingot"
+            ]
           }
         ]
       },
@@ -13,20 +15,21 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "simplestationsminer:drill_2"
+        "recipe": "simplestationsminer:miner"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_diamond"
+      "has_iron",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "simplestationsminer:drill_2"
+      "simplestationsminer:miner"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

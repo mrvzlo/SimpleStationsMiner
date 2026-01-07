@@ -21,7 +21,7 @@
     "HRH"
   ],
   "result": {
-    "count": 1,
-    "id": "simplestationsminer:miner"
-  }
+    "item": "simplestationsminer:miner"
+  },
+  "show_notification": true
 }

@@ -56,7 +56,7 @@ public class MinerRenderer implements BlockEntityRenderer<MinerBlockEntity> {
 
     private float getZShift(long gameTime) {
         float shift = (gameTime % 200) / 100f - 0.5f;
-        return Math.clamp(shift, -0.5f, 1.5f);
+        return Math.min(Math.max(shift, -0.5f), 1.5f);
     }
 
     private void drawBlock(PoseStack pose, ItemRenderer itemRenderer, ItemStack stack,
