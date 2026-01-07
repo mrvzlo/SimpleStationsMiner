@@ -76,6 +76,11 @@ public class MinerBlockEntity extends BaseStationBlockEntity {
     @Override
     protected void preWorkTick() {
         speed = WorkManager.getSpeedValue(this);
+        if (!isValidWorld())
+            working = false;
+        var stack = OreHashManager.getItemStack(type);
+        if (drill.ordinal() < UpgradeManager.getMinDrill(stack.getItem()).ordinal())
+            working = false;
     }
 
     @Override
@@ -109,12 +114,7 @@ public class MinerBlockEntity extends BaseStationBlockEntity {
 
     @Override
     public ItemStack getProduct(boolean __) {
-        if (!isValidWorld())
-            return ItemStack.EMPTY;
-        var stack = OreHashManager.getItemStack(type);
-        if (drill.ordinal() < UpgradeManager.getMinDrill(stack.getItem()).ordinal())
-            return ItemStack.EMPTY;
-        return stack;
+        return OreHashManager.getItemStack(type);
     }
 
     @Override
