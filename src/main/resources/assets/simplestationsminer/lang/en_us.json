@@ -11,8 +11,6 @@
   "simplestationsminer.configuration.work_time": "Work time in ticks",
   "simplestationsminer.configuration.max_coolant": "Max coolant storage",
   "simplestationsminer.configuration.max_catalyst": "Max catalyst storage",
-  "simplestationsminer.configuration.fuel_rf": "RF gain from signle coal",
-  "simplestationsminer.configuration.fuel_max": "Energy storage capacity in RF",
   "simplestationsminer.configuration.max_y": "Max height",
   "simplestationsminer.configuration.coolant_usage": "Coolant usage per cycle",
   "simplestationsminer.configuration.catalyst_usage": "Catalyst usage per cycle",

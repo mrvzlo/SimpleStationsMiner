@@ -3,6 +3,7 @@ package com.ave.simplestationsminer.blockentity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ave.simplestationscore.CoreConfig;
 import com.ave.simplestationscore.mainblock.BaseStationBlockEntity;
 import com.ave.simplestationscore.resources.EnergyResource;
 import com.ave.simplestationsminer.Config;
@@ -53,7 +54,8 @@ public class MinerBlockEntity extends BaseStationBlockEntity {
             }
         };
 
-        resources.put(FUEL_SLOT, new EnergyResource(Config.FUEL_CAPACITY.get(), 16, Config.FUEL_PER_COAL.get()));
+        resources.put(FUEL_SLOT,
+                new EnergyResource(CoreConfig.POWER_MAX.get(), 16, CoreConfig.POWER_PER_COAL.get()));
         var coolRes = new MinerFluidItemResource(Config.MAX_COOLANT.get(), Config.COOLANT_USAGE.get(), "coolant");
         resources.put(COOLANT_SLOT, coolRes);
         var cataRes = new MinerFluidItemResource(Config.MAX_CATALYST.get(), Config.CATALYST_USAGE.get(), "catalyst");
